@@ -65,6 +65,9 @@
       border:none;
     }
 
+    .colorblanco
+    {color:white;}
+    
     .btn-green{
       background:#27AE60;
       color:white;
@@ -112,13 +115,18 @@
 
 <!-- HERO -->
 <div class="hero">
+  @yield('content')
   <div class="container">
     <h1>@yield('titulo')</h1>
     <p>@yield('subtitulo')</p>
 
     <div class="mt-4">
-      <button class="btn btn-orange me-2">Ver Menú del Día</button>
-      <button class="btn btn-green">Unirse como Partner</button>
+      <a href="{{ route('menu.index') }}" class="btn btn-orange me-2 text-decoration-none">
+        Ver Menú del Día
+      </a>
+      <a href="{{ route('partner.register') }}" class="btn btn-green text-decoration-none">
+        Unirse como Partner
+      </a>
     </div>
   </div>
 </div>

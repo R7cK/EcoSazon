@@ -26,4 +26,6 @@ class HomeController extends Controller
         //$datos["listadoUsuarios"]=$usuario->ObtenerListado();
         return view('empresa',$datos);
     }
+
+   
 }

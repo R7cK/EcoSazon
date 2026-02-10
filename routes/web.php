@@ -14,3 +14,5 @@ Route::get('/register', [EcoSazonController::class, 'register'])->name('register
 Route::get('/contacto', function() {
     return view('contact', ['nombre' => 'Equipo EcoSazón', 'carrera' => 'Soporte']);
 })->name('contact');
+// Ruta para el registro de nuevas cocinas (Partners)
+Route::get('/partner', [EcoSazonController::class, 'partner'])->name('partner.register');
