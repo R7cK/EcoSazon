@@ -45,20 +45,19 @@ class EcoSazonController extends Controller
     /**
      * Simula la página de Login
      */
-    public function login()
-    {
-        // Por ahora retornamos un texto simple para probar
-        return "Aquí iría el formulario de Iniciar Sesión";
-    }
+public function login()
+{
+    $captcha = substr(str_shuffle("0123456789abcdefghijklmnopqrstvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 6);
+    session(['captcha_text' => $captcha]);
+    return view('login', compact('captcha'));
+}
 
-    /**
-     * Simula la página de Registro
-     */
-    public function register()
-    {
-        // Por ahora retornamos un texto simple para probar
-        return "Aquí iría el formulario de Registro";
-    }
+public function register()
+{
+    $captcha = substr(str_shuffle("0123456789abcdefghijklmnopqrstvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 6);
+    session(['captcha_text' => $captcha]);
+    return view('register', compact('captcha'));
+}
 
     /**
      * Simula el Dashboard de usuario logueado
@@ -71,4 +70,31 @@ class EcoSazonController extends Controller
     {
         return view('partner');
     }
+    public function proposito()
+{
+    return view('proposito');
+}
+
+public function cocinas()
+{
+    // Datos simulados de zonas en Mérida basados en la propuesta
+    $categorias = [
+        'Cocinas de Barrio' => [
+            ['nombre' => 'El Rincón de Itzimná', 'zona' => 'Itzimná', 'especialidad' => 'Menú del día'],
+            ['nombre' => 'Sabor a Chuburná', 'zona' => 'Chuburná de Hidalgo', 'especialidad' => 'Comida regional'],
+        ],
+        'Cocinas Especializadas' => [
+            ['nombre' => 'Eco-Sazón Vegano', 'zona' => 'García Ginerés', 'especialidad' => 'Dieta basada en plantas'],
+            ['nombre' => 'Pueblo Maya Fit', 'zona' => 'Caucel', 'especialidad' => 'Bajo en calorías'],
+        ]
+    ];
+
+    return view('cocinas', compact('categorias'));
+}
+public function planes()
+{
+    return view('planes');
+}
+
+
 }

@@ -8,7 +8,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
-
+  
   <style>
     :root{
       --verde:#27AE60;
@@ -33,17 +33,22 @@
     }
 
     /* HERO */
-    .hero{
-      background:
-        linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.45)),
-        url("{{ asset('imagenes/ima.avif') }}");
-      background-size:cover;
-      background-position:center;
-      color:white;
-      min-height:420px;
-      display:flex;
-      align-items:center;
-      text-align:center;
+   .hero {
+      background: linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url("{{ asset('imagenes/ima.avif') }}");
+      background-size: cover;
+      background-position: center;
+      color: white;
+      min-height: 450px;
+      display: flex;
+      align-items: center;
+      justify-content: center; /* Esto quita el desplazamiento a los lados */
+      text-align: center;
+    }
+
+    /* Limitamos el ancho del texto para que no ocupe toda la pantalla */
+    .hero-content {
+      max-width: 800px;
+      padding: 20px;
     }
 
     .hero h1{
@@ -94,63 +99,56 @@
 
 <body>
 
-
 <div class="top-header">
   <div class="container d-flex justify-content-between align-items-center">
-
-    
     <div>
-      <img src="{{ asset('imagenes/logo1.png') }}" alt="EcoSazón" class="logo-img">
+      <a href="{{ route('home') }}">
+        <img src="{{ asset('imagenes/logo1.png') }}" alt="EcoSazón" class="logo-img">
+      </a>
     </div>
 
-    <div>
-      <a href="#" class="me-3 text-dark text-decoration-none">Propósito</a>
-      <a href="#" class="me-3 text-dark text-decoration-none">Planes</a>
-      <a href="#" class="me-3 text-dark text-decoration-none">Cocinas</a>
-      <a href="#" class="btn btn-success btn-sm rounded-pill">Iniciar Sesión</a>
+    <div class="d-none d-md-block">
+      <a href="{{ route('proposito') }}" class="me-3 text-dark text-decoration-none fw-medium">Propósito</a>
+      <a href="{{ route('planes.index') }}" class="me-3 text-dark text-decoration-none fw-medium">Planes</a>
+      <a href="{{ route('cocinas.index') }}" class="me-3 text-dark text-decoration-none fw-medium">Cocinas</a>
+      <a href="{{ route('login') }}" class="btn btn-success btn-sm rounded-pill px-4">Iniciar Sesión</a>
     </div>
-
   </div>
 </div>
 
-<!-- HERO -->
+{{-- Solo muestra el Hero si NO estamos en la página de login o registro --}}
+@if(!Route::is('login') && !Route::is('register'))
 <div class="hero">
-  @yield('content')
-  <div class="container">
-    <h1>@yield('titulo')</h1>
-    <p>@yield('subtitulo')</p>
+  <div class="hero-content">
+    <h1 class="display-4 fw-bold">@yield('titulo')</h1>
+    <p class="fs-5 mb-4">@yield('subtitulo')</p>
 
-    <div class="mt-4">
-      <a href="{{ route('menu.index') }}" class="btn btn-orange me-2 text-decoration-none">
+    <div class="d-flex justify-content-center gap-3">
+      <a href="{{ route('menu.index') }}" class="btn btn-orange text-decoration-none shadow">
         Ver Menú del Día
       </a>
-      <a href="{{ route('partner.register') }}" class="btn btn-green text-decoration-none">
+      <a href="{{ route('partner.register') }}" class="btn btn-green text-decoration-none shadow">
         Unirse como Partner
       </a>
     </div>
   </div>
 </div>
+@endif
 
-<!-- CONTENIDO -->
-<div class="container mt-5 text-center">
-  <h3>¿Por qué elegir EcoSazón?</h3>
-  <p class="mt-3">
-    Conectamos cocinas locales con personas que buscan comida auténtica,
-    hecha con amor y tradición.
-  </p>
+<div class="main-content">
+    @yield('content')
 </div>
 
-<!-- FOOTER -->
-<div class="footer-small text-center mt-5">
-  <div>
-    © 2026 @yield("Autor") – @yield("actividad")
+<footer class="footer-small text-center mt-5">
+  <div class="container">
+    <div>© 2026 @yield("Autor", "Equipo EcoSazón") – @yield("actividad", "Mérida, Yucatán")</div>
+    <div class="mt-2 h4">
+      <i class="fa-brands fa-facebook mx-2"></i>
+      <i class="fa-brands fa-instagram mx-2"></i>
+      <i class="fa-brands fa-whatsapp mx-2"></i>
+    </div>
   </div>
-  <div class="mt-1">
-    <i class="fa-brands fa-facebook"></i>
-    <i class="fa-brands fa-instagram"></i>
-    <i class="fa-brands fa-whatsapp"></i>
-  </div>
-</div>
+</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

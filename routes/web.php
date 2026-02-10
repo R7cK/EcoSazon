@@ -16,3 +16,8 @@ Route::get('/contacto', function() {
 })->name('contact');
 // Ruta para el registro de nuevas cocinas (Partners)
 Route::get('/partner', [EcoSazonController::class, 'partner'])->name('partner.register');
+// Rutas para Propósito y Cocinas
+Route::get('/proposito', [EcoSazonController::class, 'proposito'])->name('proposito');
+Route::get('/cocinas', [EcoSazonController::class, 'cocinas'])->name('cocinas.index');
+// Ruta para la sección de Planes de suscripción
+Route::get('/planes', [EcoSazonController::class, 'planes'])->name('planes.index');
