@@ -123,13 +123,11 @@
     <h1 class="display-4 fw-bold">@yield('titulo')</h1>
     <p class="fs-5 mb-4">@yield('subtitulo')</p>
 
-    <div class="d-flex justify-content-center gap-3">
-      <a href="{{ route('menu.index') }}" class="btn btn-orange text-decoration-none shadow">
-        Ver Menú del Día
-      </a>
-      <a href="{{ route('partner.register') }}" class="btn btn-green text-decoration-none shadow">
-        Unirse como Partner
-      </a>
+    <x-search-location />
+
+    <div class="mt-4 d-flex justify-content-center gap-3">
+        <a href="{{ route('menu.index') }}" class="btn btn-orange btn-sm text-decoration-none shadow">Ver todos los menús</a>
+        <a href="{{ route('partner.register') }}" class="btn btn-green text-decoration-none shadow" >Unirse como Partner</a>
     </div>
   </div>
 </div>

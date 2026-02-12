@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\EcoSazonController;
 
-// Establecemos la vista 'empresa' como la principal
+
 Route::get('/', [HomeController::class, 'empresa'])->name('home');
 
 // Rutas funcionales para los botones
