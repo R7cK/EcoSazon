@@ -137,17 +137,74 @@
     @yield('content')
 </div>
 
-<footer class="footer-small text-center mt-5">
-  <div class="container">
-    <div>© 2026 @yield("Autor", "Equipo EcoSazón") – @yield("actividad", "Mérida, Yucatán")</div>
-    <div class="mt-2 h4">
-      <i class="fa-brands fa-facebook mx-2"></i>
-      <i class="fa-brands fa-instagram mx-2"></i>
-      <i class="fa-brands fa-whatsapp mx-2"></i>
-    </div>
-  </div>
-</footer>
+<footer class="bg-dark text-white pt-5 pb-4 mt-5">
+        <div class="container text-center text-md-start">
+            <div class="row text-center text-md-start">
+                
+                {{-- Columna 1: Marca y Slogan --}}
+                <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
+                    <h5 class="text-uppercase mb-4 fw-bold text-warning">EcoSazón</h5>
+                    <p>
+                        Conectando el sabor casero de Mérida con tu mesa. Apoya el comercio local y disfruta de comida real, todos los días.
+                    </p>
+                </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+                {{-- Columna 2: Enlaces Útiles --}}
+                <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
+                    <h5 class="text-uppercase mb-4 fw-bold text-warning">Menú</h5>
+                    <p><a href="{{ route('home') }}" class="text-white text-decoration-none">Inicio</a></p>
+                    <p><a href="{{ route('menu.index') }}" class="text-white text-decoration-none">Buscar Comida</a></p>
+                    <p><a href="{{ route('planes.index') }}" class="text-white text-decoration-none">Planes</a></p>
+                    <p><a href="{{ route('partner.register') }}" class="text-white text-decoration-none">Ser Partner</a></p>
+                </div>
+
+                {{-- Columna 3: Legal y Soporte --}}
+                <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3">
+                    <h5 class="text-uppercase mb-4 fw-bold text-warning">Soporte</h5>
+                    <p><a href="#" class="text-white text-decoration-none">Centro de Ayuda</a></p>
+                    <p><a href="#" class="text-white text-decoration-none">Términos y Condiciones</a></p>
+                    <p><a href="#" class="text-white text-decoration-none">Política de Privacidad</a></p>
+                    <p><a href="{{ route('contact') }}" class="text-white text-decoration-none">Contáctanos</a></p>
+                </div>
+
+                {{-- Columna 4: Contacto --}}
+                <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
+                    <h5 class="text-uppercase mb-4 fw-bold text-warning">Contacto</h5>
+                    <p><i class="fas fa-home me-3"></i> Mérida, Yucatán, MX</p>
+                    <p><i class="fas fa-envelope me-3"></i> hola@ecosazon.com</p>
+                    <p><i class="fas fa-phone me-3"></i> +52 999 123 4567</p>
+                </div>
+            </div>
+
+            <hr class="mb-4">
+
+            <div class="row align-items-center">
+                <div class="col-md-7 col-lg-8">
+                    <p> © {{ date('Y') }} <strong>EcoSazón</strong>. Todos los derechos reservados.
+                        <br><small>Desarrollado por: @yield("Autor", "Equipo EcoSazón")</small>
+                    </p>
+                </div>
+
+                <div class="col-md-5 col-lg-4">
+                    <div class="text-center text-md-end">
+                        <ul class="list-unstyled list-inline">
+                            <li class="list-inline-item">
+                                <a href="#" class="btn-floating btn-sm text-white" style="font-size: 23px;"><i class="fab fa-facebook"></i></a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#" class="btn-floating btn-sm text-white" style="font-size: 23px;"><i class="fab fa-twitter"></i></a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#" class="btn-floating btn-sm text-white" style="font-size: 23px;"><i class="fab fa-instagram"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
