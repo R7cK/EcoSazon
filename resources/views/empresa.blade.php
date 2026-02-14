@@ -17,9 +17,6 @@
 @section('content')
     {{-- 1. Buscador y Pilares Iniciales --}}
     <div class="container my-5">
-        <div class="text-center">
-             <x-search-location />
-        </div>
         <x-home.pilares />
     </div>
 
