@@ -21,6 +21,8 @@
     body{
       background:#FDFEFE;
       font-family: 'Poppins', sans-serif;
+      /* AUMENTO DEL TAMAÑO DE LA LETRA GLOBALMENTE */
+      font-size: 1.15rem; 
     }
 
     /* HEADER */
@@ -31,9 +33,9 @@
       transition: all 0.3s ease;
     }
 
-    /* LOGO - AUMENTADO DE TAMAÑO */
+    /* LOGO - MÁS GRANDE */
     .logo-img{
-      height: 100px; /* Tamaño base para PC más grande */
+      height: 140px; /* Tamaño base muy grande para PC */
       width: auto;
       transition: height 0.3s ease;
     }
@@ -56,26 +58,22 @@
 
     /* ESTILOS ESPECÍFICOS PARA MÓVIL */
     @media (max-width: 767.98px) {
-        /* Centrar Logo Absolutamente */
         .navbar-brand {
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            top: 0px; /* Ajustado para que el logo grande no choque arriba */
+            top: -10px; /* Ajuste por el crecimiento del logo */
         }
 
-        /* Logo más grande en móvil */
         .logo-img {
-            height: 85px; /* Aumentado de 60px a 85px */
+            height: 110px; /* Ajustado proporcionalmente en móvil */
         }
 
-        /* El botón hamburguesa se queda a la derecha */
         .navbar-toggler {
             margin-left: auto;
-            margin-top: 10px; /* Un pequeño ajuste para centrarlo con el logo */
+            margin-top: 10px; 
         }
         
-        /* Estilo del Menú Desplegable (Tarjeta Blanca) */
         .navbar-collapse {
             background: rgba(255, 255, 255, 0.98);
             margin-top: 20px;
@@ -91,7 +89,7 @@
             padding: 12px 0;
             border-bottom: 1px solid #f0f0f0;
             color: #555 !important;
-            font-size: 1.1rem; /* Texto un poco más grande */
+            font-size: 1.25rem; /* Más grande en el menú móvil */
         }
 
         .nav-link:last-child {
@@ -102,7 +100,7 @@
             width: 100%;
             margin-top: 15px;
             padding: 12px;
-            font-size: 1rem;
+            font-size: 1.15rem;
         }
     }
 
@@ -111,6 +109,7 @@
         .nav-link {
             position: relative;
             font-weight: 500;
+            font-size: 1.2rem;
         }
         
         .nav-link::after {
@@ -151,7 +150,7 @@
       background:#F39C12;
       color:white;
       border-radius:30px;
-      padding:10px 25px;
+      padding:12px 30px;
       border:none;
       transition: transform 0.2s;
     }
@@ -160,7 +159,7 @@
       background:#27AE60;
       color:white;
       border-radius:30px;
-      padding:10px 25px;
+      padding:12px 30px;
       border:none;
       transition: transform 0.2s;
     }
@@ -179,6 +178,23 @@
     .footer-link:hover {
         color: var(--amarillo);
     }
+    
+    .footer-social-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: rgba(255,255,255,0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .footer-social-icon:hover {
+        background-color: var(--amarillo);
+        color: #000 !important;
+        transform: translateY(-3px);
+    }
 
   </style>
 </head>
@@ -187,7 +203,7 @@
 
 <div class="top-header sticky-top shadow-sm" style="z-index: 1050;">
     <nav class="navbar navbar-expand-md p-0">
-        <div class="container position-relative" style="min-height: 90px;"> 
+        <div class="container position-relative" style="min-height: 100px;"> 
             <a class="navbar-brand p-0" href="{{ route('home') }}">
                 <img src="{{ asset('imagenes/logo1.png') }}" alt="EcoSazón" class="logo-img">
             </a>
@@ -201,7 +217,7 @@
                     <a href="{{ route('proposito') }}" class="nav-link me-md-4 text-dark">Propósito</a>
                     <a href="{{ route('planes.index') }}" class="nav-link me-md-4 text-dark">Planes</a>
                     <a href="{{ route('cocinas.index') }}" class="nav-link me-md-4 text-dark">Cocinas</a>
-                    <a href="{{ route('login') }}" class="btn btn-success btn-sm rounded-pill px-4 mt-3 mt-md-0 btn-inicio-sesion shadow-sm">Iniciar Sesión</a>
+                    <a href="{{ route('login') }}" class="btn btn-success btn-lg rounded-pill px-4 mt-3 mt-md-0 btn-inicio-sesion shadow-sm">Iniciar Sesión</a>
                 </div>
             </div>
         </div>
@@ -211,16 +227,12 @@
 @if(!Route::is('login') && !Route::is('register'))
 <div class="hero">
   <div class="hero-content">
-    <h1 class="display-4 fw-bold mb-3">@yield('titulo')</h1>
-    <p class="fs-5 mb-5 opacity-75">@yield('subtitulo')</p>
+    <h1 class="display-3 fw-bold mb-3">@yield('titulo')</h1>
+    <p class="fs-4 mb-5 opacity-75">@yield('subtitulo')</p>
 
-    <div class="bg-white p-3 rounded-4 shadow-lg mx-auto" style="max-width: 600px;">
-        <x-search-location />
-    </div>
-
-    <div class="mt-5 d-flex justify-content-center gap-3 flex-wrap">
-        <a href="{{ route('menu.index') }}" class="btn btn-orange fw-bold shadow">Ver todos los menús</a>
-        <a href="{{ route('partner.register') }}" class="btn btn-green fw-bold shadow" >Unirse como Partner</a>
+    <div class="mt-4 d-flex justify-content-center gap-3 flex-wrap">
+        <a href="{{ route('menu.index') }}" class="btn btn-orange fs-5 fw-bold shadow">Ver todos los menús</a>
+        <a href="{{ route('partner.register') }}" class="btn btn-green fs-5 fw-bold shadow" >Unirse como Partner</a>
     </div>
   </div>
 </div>
@@ -232,11 +244,11 @@
 
 <footer class="bg-dark text-white pt-5 pb-4 mt-5">
     <div class="container text-center text-md-start">
-        <div class="row text-center text-md-start">
+        <div class="row text-center text-md-start mb-4">
             
             {{-- Columna 1: Marca y Slogan --}}
             <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
-                <h5 class="text-uppercase mb-4 fw-bold text-warning">EcoSazón</h5>
+                <h5 class="text-uppercase mb-4 fw-bold text-warning fs-4">EcoSazón</h5>
                 <p>
                     Conectando el sabor casero de Mérida con tu mesa. Apoya el comercio local y disfruta de comida real, todos los días.
                 </p>
@@ -269,28 +281,21 @@
             </div>
         </div>
 
-        <hr class="mb-4">
-
-        <div class="row align-items-center">
-            <div class="col-md-7 col-lg-8">
-                <p> © {{ date('Y') }} <strong>EcoSazón</strong>. Todos los derechos reservados.
+        <div class="row align-items-center border-top border-secondary pt-4">
+            <div class="col-md-6 text-center text-md-start">
+                <p class="mb-0"> © {{ date('Y') }} <strong>EcoSazón</strong>. Todos los derechos reservados.
                     <br><small>Desarrollado por: @yield("Autor", "Equipo EcoSazón")</small>
                 </p>
             </div>
 
-            <div class="col-md-5 col-lg-4">
-                <div class="text-center text-md-end">
-                    <ul class="list-unstyled list-inline">
-                        <li class="list-inline-item">
-                            <a href="#" class="btn-floating btn-sm text-white" style="font-size: 23px;"><i class="fab fa-facebook"></i></a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a href="#" class="btn-floating btn-sm text-white" style="font-size: 23px;"><i class="fab fa-twitter"></i></a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a href="#" class="btn-floating btn-sm text-white" style="font-size: 23px;"><i class="fab fa-instagram"></i></a>
-                        </li>
-                    </ul>
+            {{-- REDES SOCIALES MOVIDAS Y MEJORADAS --}}
+            <div class="col-md-6 mt-4 mt-md-0 text-center text-md-end">
+                <div class="d-inline-flex gap-3">
+                    <a href="#" class="text-white footer-social-icon fs-4"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-white footer-social-icon fs-4"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-white footer-social-icon fs-4"><i class="fab fa-tiktok"></i></a>
+                    <a href="#" class="text-white footer-social-icon fs-4"><i class="fab fa-x-twitter"></i></a>
+                    <a href="#" class="text-white footer-social-icon fs-4"><i class="fab fa-youtube"></i></a>
                 </div>
             </div>
         </div>

@@ -20,41 +20,61 @@
     .card-cocina:hover { transform: translateY(-5px); }
     .badge-calif { background: var(--amarillo); color: #000; }
     .btn-order { background: var(--verde); color: white; border-radius: 20px; }
-    .price-tag { color: var(--verde); font-weight: bold; font-size: 1.2rem; }
+    .price-tag { color: var(--verde); font-weight: bold; font-size: 1.3rem; }
     .section-title { color: #E67E22; border-bottom: 2px solid #F1C40F; display: inline-block; }
+    .roof-icon { margin-bottom: -10px; text-align: center; }
 </style>
 
 <div class="container my-5">
     <div class="text-center mb-5">
-        <h2 class="section-title pb-2">Menús Disponibles en tu Zona</h2>
-        <p class="colorblanco">Mostrando opciones en Mérida, Yucatán con entrega en Logística Verde 🚲</p>
+        <h2 class="section-title pb-2 fw-bold">Menús Disponibles en tu Zona</h2>
+        <p class="text-muted fs-5">Mostrando opciones en Mérida, Yucatán con entrega en Logística Verde 🚲</p>
     </div>
 
     <div class="row g-4">
         @foreach($cocinas as $cocina)
         <div class="col-md-4">
-            <div class="card h-100 card-cocina">
-                <img src="{{ asset($cocina['imagen']) }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ $cocina['nombre'] }}">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="badge badge-calif"><i class="fas fa-star"></i> {{ $cocina['calificacion'] }}</span>
-                        <span class="colorblanco small"><i class="fas fa-bicycle"></i> $15 - $30 MXN</span>
-                    </div>
-                    <h5 class="card-title fw-bold">{{ $cocina['nombre'] }}</h5>
-                    <p class="text-primary mb-1"><i class="fas fa-utensils me-1"></i> {{ $cocina['menu_dia'] }}</p>
-                    <p class="card-text small colorblanco">{{ $cocina['descripcion'] }}</p>
+            <div class="card h-100 card-cocina position-relative">
+                
+                {{-- Fondo/Platillo --}}
+                <div class="position-relative">
+                    <img src="{{ asset($cocina['imagen']) }}" class="card-img-top" style="height: 220px; object-fit: cover;" alt="{{ $cocina['nombre'] }}">
                     
-                    <div class="mt-3 p-2 bg-light rounded">
-                        <label class="form-label small fw-bold">Personaliza tu ración</label>
-                        <select class="form-select form-select-sm" onchange="updatePrice(this, {{ $cocina['precio_completo'] }})">
+                    {{-- Espacio para imagen de la fachada --}}
+                    <div class="position-absolute shadow-sm border border-3 border-white bg-light" 
+                         style="bottom: -35px; left: 20px; width: 80px; height: 80px; border-radius: 50%; overflow: hidden; z-index: 2;">
+                        <img src="https://via.placeholder.com/80?text=Fachada" class="w-100 h-100" style="object-fit: cover;" alt="Fachada de la cocina">
+                    </div>
+                </div>
+
+                <div class="card-body pt-5">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge badge-calif ms-auto fs-6"><i class="fas fa-star text-dark"></i> {{ $cocina['calificacion'] }}</span>
+                    </div>
+
+                    {{-- Techo sobre el nombre --}}
+                    <div class="roof-icon">
+                        <svg width="45" height="18" viewBox="0 0 40 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 13 L20 2 L38 13" stroke="#27AE60" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+
+                    <h4 class="card-title fw-bold text-center mb-3">{{ $cocina['nombre'] }}</h4>
+                    
+                    <p class="text-primary mb-2 fs-5"><i class="fas fa-utensils me-1"></i> {{ $cocina['menu_dia'] }}</p>
+                    <p class="card-text text-muted">{{ $cocina['descripcion'] }}</p>
+                    
+                    <div class="mt-4 p-3 bg-light rounded">
+                        <label class="form-label fw-bold">Personaliza tu ración</label>
+                        <select class="form-select" onchange="updatePrice(this, {{ $cocina['precio_completo'] }})">
                             <option value="1">Ración Completa - ${{ number_format($cocina['precio_completo'], 2) }}</option>
                             <option value="0.6">Media Ración - ${{ number_format($cocina['precio_completo'] * 0.6, 2) }}</option>
                         </select>
                     </div>
                 </div>
-                <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center pb-3">
+                <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center pb-4 px-4">
                     <span class="price-tag">$<span class="val">{{ number_format($cocina['precio_completo'], 2) }}</span></span>
-                    <button class="btn btn-order btn-sm px-4 shadow-sm" onclick="alert('Pedido agregado al carrito')">Pedir Ahora</button>
+                    <button class="btn btn-order px-4 shadow-sm fs-5" onclick="alert('Pedido agregado al carrito')">Pedir Ahora</button>
                 </div>
             </div>
         </div>
