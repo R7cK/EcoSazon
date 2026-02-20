@@ -15,21 +15,21 @@
                         <div class="p-3">
                             <div class="text-warning mb-3"><i class="fas fa-eye-slash fa-3x"></i></div>
                             <h5>Visibilidad Digital</h5>
-                            <p class="small text-muted">Damos presencia en línea a cocinas que no tienen redes sociales.</p>
+                            <p class="text-muted">Damos presencia en línea a cocinas que no tienen redes sociales.</p>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="p-3">
                             <div class="text-success mb-3"><i class="fas fa-bicycle fa-3x"></i></div>
                             <h5>Logística Verde</h5>
-                            <p class="small text-muted">Entregas en vehículos eléctricos para cuidar el ambiente de Mérida.</p>
+                            <p class="text-muted">Entregas en vehículos eléctricos para cuidar el ambiente de Mérida.</p>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="p-3">
                             <div class="text-primary mb-3"><i class="fas fa-hand-holding-heart fa-3x"></i></div>
                             <h5>Comercio Justo</h5>
-                            <p class="small text-muted">Comisiones bajas del 12% al 15% para apoyar a tu vecino.</p>
+                            <p class="text-muted">Comisiones bajas del 12% al 15% para apoyar a tu vecino.</p>
                         </div>
                     </div>
                 </div>
