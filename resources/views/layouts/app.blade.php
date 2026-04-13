@@ -35,7 +35,7 @@
 
     /* LOGO CONFIGURACIÓN */
     .logo-img{
-      height: 140px; 
+      height: 115px; 
       width: auto;
       transition: height 0.3s ease;
     }

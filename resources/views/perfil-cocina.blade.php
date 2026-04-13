@@ -81,9 +81,9 @@
                 <div class="col-md-5">
                     <label class="form-label fw-bold small text-muted mb-1 d-flex justify-content-between">
                         <span>Precio Máximo:</span> 
-                        <span class="text-success ms-1">$<span id="valor-precio-plato">300</span></span>
+                        <span class="text-success ms-1">$<span id="valor-precio-plato">150</span></span>
                     </label>
-                    <input type="range" class="form-range" min="0" max="300" step="5" id="rango-precio-plato" value="300">
+                    <input type="range" class="form-range" min="50" max="150" step="5" id="rango-precio-plato" value="150">
                 </div>
             </div>
             

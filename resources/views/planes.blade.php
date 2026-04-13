@@ -8,23 +8,22 @@
 <div class="container my-5">
     <div class="row justify-content-center g-4">
         <div class="col-md-5">
-            <div class="card h-100 border-0 shadow-sm text-center p-4" style="border-radius: 25px;">
+            <div class="card h-100 shadow text-center p-4" style="border-radius: 25px; background: #fef9e7; border: 2px solid var(--verde) !important;">
                 <div class="card-body">
                     <h3 class="fw-bold mb-3">Usuario Casual</h3>
-                    <div class="display-4 fw-bold mb-3" style="color: var(--verde);">$0 <small class="fs-6 text-muted">/mes</small></div>
+                    <div class="display-4 fw-bold mb-3" style="color: #198754;">$0 <small class="fs-6 text-muted">/mes</small></div>
                     <p class="text-muted mb-4">Ideal para pedidos ocasionales desde casa u oficina.</p>
-                    
-                    <ul class="list-unstyled text-start mb-5">
-                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Registro gratuito </li>
-                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Pago por menú + envío </li>
-                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Tarifa de envío: $15 - $30 MXN </li>
-                        <li class="mb-2 text-muted"><i class="fas fa-times me-2"></i> Sin envíos gratis</li>
-                    </ul>
+            <ul class="list-unstyled text-start mb-5">
+                <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Registro gratuito </li>
+                <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Pago por menú + envío </li>
+                <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Tarifa de envío: $15 - $30 MXN </li>
+                <li class="mb-2 text-muted"><i class="fas fa-times me-2"></i> Sin envíos gratis</li>
+            </ul>
 
-                    <a href="{{ route('register') }}" class="btn btn-outline-success w-100 rounded-pill">Registrarse Gratis</a>
-                </div>
-            </div>
+            <a href="{{ route('register') }}" class="btn btn-outline-success w-100 rounded-pill shadow fw-bold border-2">¡PRUEBA BOTON!</a>
         </div>
+    </div>
+</div>
 
         <div class="col-md-5">
             <div class="card h-100 border-0 shadow text-center p-4" style="border-radius: 25px; background: #fef9e7; border: 2px solid var(--amarillo) !important;">

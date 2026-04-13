@@ -18,7 +18,13 @@ class EcoSazonController extends Controller
      */
     public function index()
     {
-        // Lógica para la home si es necesaria
+     // Obtiene todas las cocinas de la base de datos y las agrupa por la columna 'categoria'
+    $categorias = Cocina::all()->groupBy('categoria');
+
+    // Obtiene las zonas únicas para el select del filtro
+    $zonas = Cocina::select('zona')->distinct()->pluck('zona');
+
+    return view('tu.vista', compact('categorias', 'zonas'));   // Lógica para la home si es necesaria
     }
 
     /**
@@ -92,9 +98,9 @@ public function ownerDashboard()
 
     public function cocinas()
     {
-        $todasLasCocinas = Cocina::all();
-        $categorias = $todasLasCocinas->groupBy('categoria');
-        $zonas = Cocina::select('zona')->distinct()->orderBy('zona')->pluck('zona');
+        $cocinas = Cocina::withAvg('platos', 'precio')->get();
+        $categorias = $cocinas->groupBy('categoria');
+        $zonas = Cocina::select('zona')->distinct()->pluck('zona');
 
         return view('cocinas', compact('categorias', 'zonas'));
     }
@@ -226,7 +232,7 @@ public function ownerDashboard()
         ]);
 
         \App\Models\Comentario::create([
-            'user_id' => auth()->id(),
+            'user_id' => Auth::id(),
             'cocina_id' => $cocinaId,
             'contenido' => $request->contenido,
             'calificacion' => $request->calificacion
