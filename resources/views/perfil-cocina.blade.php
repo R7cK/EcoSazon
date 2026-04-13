@@ -127,6 +127,51 @@
         </div>
     </div>
 </div>
+<div class="container my-5">
+    <hr class="my-5">
+    <h3 class="fw-bold mb-4" style="color: #E67E22;">Opiniones de la Comunidad</h3>
+
+    @auth
+        <form action="{{ route('cocina.comentario', $cocina->id) }}" method="POST" class="mb-5 bg-white p-4 rounded-4 shadow-sm">
+            @csrf
+            <div class="mb-3">
+                <label class="form-label fw-bold">Tu calificación</label>
+                <select name="calificacion" class="form-select rounded-pill">
+                    <option value="5">⭐⭐⭐⭐⭐ (Excelente)</option>
+                    <option value="4">⭐⭐⭐⭐ (Muy bueno)</option>
+                    <option value="3">⭐⭐⭐ (Bueno)</option>
+                    <option value="2">⭐⭐ (Regular)</option>
+                    <option value="1">⭐ (Malo)</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <textarea name="contenido" class="form-control rounded-4" rows="3" placeholder="Cuéntanos tu experiencia..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-success rounded-pill px-4">Publicar Comentario</button>
+        </form>
+    @else
+        <div class="alert alert-light border rounded-4 text-center">
+            Para dejar un comentario, <a href="{{ route('login') }}" class="fw-bold text-success">inicia sesión aquí</a>.
+        </div>
+    @endauth
+
+    <div class="list-group list-group-flush">
+        @forelse($cocina->comentarios as $comentario)
+            <div class="list-group-item border-0 px-0 mb-3">
+                <div class="d-flex w-100 justify-content-between align-items-center">
+                    <h6 class="mb-1 fw-bold">{{ $comentario->user->name }}</h6>
+                    <small class="text-warning">
+                        {{ str_repeat('⭐', $comentario->calificacion) }}
+                    </small>
+                </div>
+                <p class="mb-1 text-muted">{{ $comentario->contenido }}</p>
+                <small class="text-secondary">{{ $comentario->created_at->diffForHumans() }}</small>
+            </div>
+        @empty
+            <p class="text-center text-muted">Aún no hay comentarios. ¡Sé el primero en opinar!</p>
+        @endforelse
+    </div>
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
