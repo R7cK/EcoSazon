@@ -8,26 +8,49 @@
 <div class="container my-5">
 
     <style>
-    /* Contenedor principal del filtro */
-    .filtros-llamativos {
+   .filtros-llamativos {
         background: linear-gradient(145deg, #ffffff, #f8f9fa);
         border-radius: 20px;
         border-left: 8px solid #E67E22; 
         box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-        padding: 30px;
+        padding: 25px;
         transition: all 0.3s ease;
-
-        position: sticky;
-        top: 20px;
-        z-index: 1020;
     }
 
-    /* Efecto al pasar el mouse por el contenedor */
     .filtros-llamativos:hover {
         box-shadow: 0 20px 40px rgba(230, 126, 34, 0.15);
     }
 
-    /* Estilo para los títulos de los filtros */
+    /* ESTA ES LA MAGIA DEL PROFE: Responsivo y Pegajoso */
+    @media (min-width: 992px) { /* Solo aplica de pantallas grandes en adelante */
+        .filtros-llamativos {
+        position: sticky !important;
+        /* 1. Aumentamos el margen para que no lo tape el navbar */
+        /* Prueba con 120px o 140px si tu navbar es muy grande */
+        top: 140px !important; 
+
+        /* 2. Ajustamos la altura máxima para que siempre quepa en la pantalla */
+        /* 100vh es el total de la pantalla, le restamos el espacio de arriba y un margen abajo */
+        max-height: calc(100vh - 150px) !important;
+        
+        /* 3. Permitimos scroll interno por si la lista de filtros es muy larga */
+        overflow-y: auto !important;
+        
+        /* Evita que se estire innecesariamente */
+        height: fit-content !important;
+        z-index: 1020;
+    }
+
+    /* Estilo para que la barrita de scroll interna no se vea fea */
+    .filtros-llamativos::-webkit-scrollbar {
+        width: 5px;
+    }
+    .filtros-llamativos::-webkit-scrollbar-thumb {
+        background: #E67E22;
+        border-radius: 10px;
+    }
+    }
+
     .filtro-label {
         color: #4a4a4a;
         font-weight: 800;
@@ -37,31 +60,28 @@
         margin-bottom: 8px;
         display: block;
     }
-
-    /* Inputs y Selects más modernos */
-    .input-premium {
+        .input-premium {
         border: 2px solid #eee !important;
         border-radius: 12px !important;
-        padding: 12px 15px !important;
+        padding: 10px 15px !important;
         background-color: #fff !important;
         transition: all 0.3s !important;
     }
 
-    .input-premium:focus {
+
+ .input-premium:focus {
         border-color: #E67E22 !important;
-        background-color: #fff !important;
+        
         transform: translateY(-2px);
     }
 
-    /* El buscador principal con un estilo más grande */
+
     .search-group-premium {
         box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         border-radius: 12px;
         overflow: hidden;
     }
-
-    /* Iconos con pulso naranja */
-    .icono-naranja {
+  .icono-naranja {
         color: #E67E22;
         background: rgba(230, 126, 34, 0.1);
         padding: 8px;
@@ -69,52 +89,54 @@
     }
 </style>
 
-   <div class="filtros-llamativos mb-5">
-    <div class="d-flex align-items-center mb-4">
-        <i class="fas fa-search-location fa-2x icono-naranja me-3"></i>
-        <div>
-            <h4 class="fw-black mb-0" style="color: #2c3e50; letter-spacing: -1px;">ENCUENTRA TU SABOR</h4>
-            <p class="text-muted small mb-0">Personaliza tu búsqueda para encontrar la cocina perfecta</p>
-        </div>
-    </div>
+  <div class="row">
     
-    <div class="row g-4">
-        <div class="col-12 col-lg-5">
-            <span class="filtro-label">¿Qué se te antoja hoy?</span>
-            <div class="input-group search-group-premium">
-                <select class="form-select border-0 bg-light" id="tipo-busqueda" style="max-width: 130px; font-weight: 600;">
-                    <option value="todos">🔍 Todo</option>
-                    <option value="nombre">Nombre</option>
-                    <option value="categoria">Categoría</option>
-                </select>
-                <input type="text" id="input-busqueda" class="form-control border-0" placeholder="Ej: La mejor cochinita...">
-            </div>
-        </div>
-
-        <div class="col-12 col-md-4 col-lg-3">
-            <span class="filtro-label">Presupuesto Máximo</span>
-            <div class="px-2">
-                <input type="range" class="form-range" min="0" max="200" step="5" id="rango-precio" value="200">
-                <div class="d-flex justify-content-between">
-                    <span class="fw-bold text-muted small">$0</span>
-                    <span class="badge bg-success fs-6">$<span id="valor-precio">200</span></span>
+    <div class="col-12 col-lg-3 mb-4">
+        <div class="filtros-llamativos">
+            <div class="d-flex align-items-center mb-4">
+                <i class="fas fa-search-location fa-2x icono-naranja me-3"></i>
+                <div>
+                    <h5 class="fw-black mb-0" style="color: #2c3e50;">ENCUENTRA</h5>
+                    <p class="text-muted small mb-0">Tu sabor ideal</p>
                 </div>
             </div>
-        </div>
+            
+            <div class="mb-4">
+                <span class="filtro-label">¿Qué se te antoja?</span>
+                <div class="input-group search-group-premium mb-2">
+                    <select class="form-select border-0 bg-light" id="tipo-busqueda" style="max-width: 100px; font-size: 0.85rem;">
+                        <option value="todos">Todo</option>
+                        <option value="nombre">Nom</option>
+                        <option value="categoria">Cat</option>
+                    </select>
+                    <input type="text" id="input-busqueda" class="form-control border-0" placeholder="Ej: Cochinita...">
+                </div>
+            </div>
 
-        <div class="col-12 col-md-4 col-lg-2">
-            <span class="filtro-label">Zona</span>
-            <select class="form-select input-premium" id="select-zona">
-                <option value="todas">📍 Todas</option>
-                @foreach($zonas as $zona)
-                    <option value="{{ $zona }}">{{ $zona }}</option>
-                @endforeach
-            </select>
-        </div>
+            <div class="mb-4">
+                <span class="filtro-label">Presupuesto Máx</span>
+                <div class="px-2">
+                    <input type="range" class="form-range" min="40" max="150" step="10" id="rango-precio" value="300">
+                    <div class="d-flex justify-content-between">
+                        <span class="fw-bold text-muted small">$50</span>
+                        <span class="badge bg-success fs-6">$<span id="valor-precio">150</span></span>
+                    </div>
+                </div>
+            </div>
 
-            <div class="col-12 col-md-4 col-lg-2">
+            <div class="mb-4">
+                <span class="filtro-label">Zona</span>
+                <select class="form-select input-premium w-100" id="select-zona">
+                    <option value="todas">📍 Todas las zonas</option>
+                    @foreach($zonas as $zona)
+                        <option value="{{ $zona }}">{{ $zona }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="mb-2">
                 <span class="filtro-label">Popularidad</span>
-                <select class="form-select input-premium" id="select-calificacion">
+                <select class="form-select input-premium w-100" id="select-calificacion">
                     <option value="0">⭐ Todas</option>
                     <option value="4.5">4.5+ Excelente</option>
                     <option value="4.0">4.0+ Muy Buena</option>
@@ -123,64 +145,69 @@
         </div>
     </div>
 
-    <div id="mensaje-no-resultados" class="text-center my-5" style="display: none;">
-        <h4 class="text-danger fw-bold"><i class="fas fa-exclamation-circle"></i> No existen cocinas con esos filtros.</h4>
-        <p class="text-muted fs-5">Prueba aumentando el precio o quitando el filtro de zona.</p>
-    </div>
+    <div class="col-12 col-lg-9">
+        
+        <div id="mensaje-no-resultados" class="text-center my-5" style="display: none;">
+            <h4 class="text-danger fw-bold"><i class="fas fa-exclamation-circle"></i> No existen cocinas con esos filtros.</h4>
+            <p class="text-muted fs-5">Prueba aumentando el precio o quitando el filtro de zona.</p>
+        </div>
 
-    @foreach($categorias as $titulo => $lista)
-    <div class="mb-5 categoria-seccion">
-        <h3 class="fw-bold mb-4" style="color: #E67E22; border-left: 5px solid var(--amarillo); padding-left: 15px;">
-            {{ $titulo }}
-        </h3>
-        <div class="row g-4">
-            @foreach($lista as $cocina)
-            <div class="col-12 col-md-6 col-lg-4 tarjeta-filtro"
-                 data-precio="{{ $cocina['precio_promedio'] }}"
-                 data-zona="{{ $cocina['zona'] }}"
-                 data-calif="{{ $cocina['calificacion'] }}">
-                
-                <div class="card h-100 border-0 shadow-sm overflow-hidden">
-                    <img src="{{ asset($cocina->imagen_principal) }}" class="card-img-top" alt="{{ $cocina['nombre'] }}" style="height: 200px; object-fit: cover;">
-                    <div class="card-body d-flex flex-column">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <h5 class="mb-0 item-nombre fw-bold text-dark">{{ $cocina['nombre'] }}</h5>
-                            @if($cocina['abierto_24h'])
-                                <span class="badge bg-success ms-2 px-2 py-1"><i class="fas fa-clock me-1"></i>24 Hrs</span>
-                            @endif
-                        </div>
-                        <p class="mb-2 text-muted small">
-                            <span class="badge bg-secondary me-1 item-categoria">{{ $cocina['categoria'] }}</span>
-                            <i class="fas fa-map-marker-alt ms-1 text-danger"></i> {{ $cocina['zona'] }}
-                        </p>
-                        <p class="card-text text-secondary mt-2 mb-3" style="font-size: 0.9rem;">
-                            {{ $cocina['descripcion'] }} <br>
-                            <span class="text-success small fw-bold mt-1 d-block">Precio prom. ${{$cocina['precio_promedio']}}</span>
-                        </p>
-                        <div class="mb-4 text-warning mt-auto">
-                            @for($i = 1; $i <= 5; $i++)
-                                @if($i <= floor($cocina['calificacion']))
-                                    <i class="fas fa-star"></i>
-                                @elseif($i - 0.5 == $cocina['calificacion'])
-                                    <i class="fas fa-star-half-alt"></i>
-                                @else
-                                    <i class="far fa-star"></i>
+        @foreach($categorias as $titulo => $lista)
+        <div class="mb-5 categoria-seccion">
+            <h3 class="fw-bold mb-4" style="color: #E67E22; border-left: 5px solid #f1c40f; padding-left: 15px;">
+                {{ $titulo }}
+            </h3>
+            <div class="row g-4">
+                @foreach($lista as $cocina)
+                <div class="col-12 col-lg-6 tarjeta-filtro"
+                     data-precio="{{ round($cocina->platos_avg_precio ?? 0) }}"
+                     data-zona="{{ $cocina->zona }}"
+                     data-calif="{{ $cocina->calificacion }}">
+                    
+                    <div class="card h-100 border-0 shadow-sm overflow-hidden">
+                        <img src="{{ asset($cocina->imagen_principal) }}" class="card-img-top" alt="{{ $cocina->nombre }}" style="height: 180px; object-fit: cover;">
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h6 class="mb-0 item-nombre fw-bold text-dark">{{ $cocina->nombre }}</h6>
+                                @if($cocina->abierto_24h)
+                                    <span class="badge bg-success ms-1 px-1 py-1" style="font-size:0.65rem;"><i class="fas fa-clock me-1"></i>24 Hrs</span>
                                 @endif
-                            @endfor
-                            <span class="text-dark small ms-1 fw-bold">({{ $cocina['calificacion'] }})</span>
-                        </div>
-                        <div>
-                            <a href="{{ route('cocina.perfil', $cocina->slug) }}" class="btn text-white w-100 fw-bold" style="background-color: #E67E22;">
-                                <i class="fas fa-utensils me-2"></i> Ver Menú
-                            </a>
+                            </div>
+                            <p class="mb-2 text-muted" style="font-size: 0.8rem;">
+                                <span class="badge bg-secondary me-1 item-categoria">{{ $cocina->categoria }}</span>
+                                <i class="fas fa-map-marker-alt ms-1 text-danger"></i> {{ $cocina->zona }}
+                            </p>
+                            <p class="card-text text-secondary mt-1 mb-2" style="font-size: 0.85rem;">
+                                {{ \Illuminate\Support\Str::limit($cocina->descripcion, 60) }} <br>
+                                <span class="text-success small fw-bold mt-1 d-block">
+                                    Precio prom. ${{ round($cocina->platos_avg_precio ?? 0) }}
+                                </span>
+                            </p>
+                            <div class="mb-3 text-warning mt-auto" style="font-size: 0.85rem;">
+                                @for($i = 1; $i <= 5; $i++)
+                                    @if($i <= floor($cocina->calificacion))
+                                        <i class="fas fa-star"></i>
+                                    @elseif($i - 0.5 == $cocina->calificacion)
+                                        <i class="fas fa-star-half-alt"></i>
+                                    @else
+                                        <i class="far fa-star"></i>
+                                    @endif
+                                @endfor
+                                <span class="text-dark ms-1 fw-bold">({{ $cocina->calificacion }})</span>
+                            </div>
+                            <div>
+                                <a href="{{ route('cocina.perfil', $cocina->slug) }}" class="btn text-white w-100 fw-bold btn-sm" style="background-color: #E67E22;">
+                                    <i class="fas fa-utensils me-1"></i> Menú
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
+                @endforeach
             </div>
-            @endforeach
         </div>
+        @endforeach
     </div>
-    @endforeach
 </div>
 
 <script>
@@ -194,7 +221,7 @@
         const mensajeNoResultados = document.getElementById('mensaje-no-resultados');
         const tarjetas = document.querySelectorAll('.tarjeta-filtro');
         const secciones = document.querySelectorAll('.categoria-seccion');
-
+        
         rangoPrecio.addEventListener('input', function() {
             valorPrecio.textContent = this.value;
             aplicarFiltros();

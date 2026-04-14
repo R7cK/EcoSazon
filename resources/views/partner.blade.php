@@ -70,7 +70,7 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-success w-100 rounded-pill py-2">Solicitar Unión</button>
+                    <button type="button" onclick="alert('¡Próximamente! El registro para Partners estará habilitado muy pronto.');" class="btn btn-success w-100 rounded-pill py-2">Solicitar Unión</button>
                 </form>
             </div>
         </div>

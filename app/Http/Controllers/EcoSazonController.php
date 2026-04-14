@@ -17,9 +17,27 @@ class EcoSazonController extends Controller
      * Muestra la página principal de EcoSazón.
      */
     public function index()
-    {
-        // Lógica para la home si es necesaria
-    }
+{
+    // Hacemos el Join pero sin el groupBy para evitar el choque con el modo estricto de MySQL
+    $cocinas = \App\Models\Cocina::join('platos', 'cocinas.id', '=', 'platos.cocina_id')
+        ->select(
+            'cocinas.nombre',
+            'cocinas.imagen_principal as imagen',
+            'platos.nombre as menu_dia',
+            'platos.precio as precio_completo',
+            'cocinas.calificacion',
+            'cocinas.zona',
+            'platos.descripcion'
+        )
+        ->get();
+
+    // Obtenemos las zonas únicas de la tabla cocinas para el filtro
+    $zonas = \App\Models\Cocina::select('zona')
+                ->distinct()
+                ->pluck('zona');
+
+    return view('ecosazon', compact('cocinas', 'zonas'));
+}
 
     /**
      * Muestra la página de Login
@@ -92,9 +110,9 @@ public function ownerDashboard()
 
     public function cocinas()
     {
-        $todasLasCocinas = Cocina::all();
-        $categorias = $todasLasCocinas->groupBy('categoria');
-        $zonas = Cocina::select('zona')->distinct()->orderBy('zona')->pluck('zona');
+        $cocinas = Cocina::withAvg('platos', 'precio')->get();
+        $categorias = $cocinas->groupBy('categoria');
+        $zonas = Cocina::select('zona')->distinct()->pluck('zona');
 
         return view('cocinas', compact('categorias', 'zonas'));
     }
@@ -226,7 +244,7 @@ public function ownerDashboard()
         ]);
 
         \App\Models\Comentario::create([
-            'user_id' => auth()->id(),
+            'user_id' => Auth::id(),
             'cocina_id' => $cocinaId,
             'contenido' => $request->contenido,
             'calificacion' => $request->calificacion

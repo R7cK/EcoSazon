@@ -35,7 +35,7 @@
 
     /* LOGO CONFIGURACIÓN */
     .logo-img{
-      height: 140px; 
+      height: 115px; 
       width: auto;
       transition: height 0.3s ease;
     }
@@ -294,7 +294,7 @@
                                 {{ Auth::user()->name }}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end rounded-4 p-2 shadow" aria-labelledby="navbarUser">
-                                <li><a class="dropdown-item py-2" href="{{ Auth::user()->role === 'owner' ? route('owner.dashboard') : route('dashboard') }}"><i class="fas fa-user me-2"></i>Perfil</a></li>
+                                <li><a class="dropdown-item py-2" href="#" onclick="alert('¡La sección de Perfil estará habilitada muy pronto!'); return false;"><i class="fas fa-user me-2"></i>Perfil</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <form action="{{ route('logout') }}" method="POST" class="d-inline">
