@@ -17,15 +17,27 @@ class EcoSazonController extends Controller
      * Muestra la página principal de EcoSazón.
      */
     public function index()
-    {
-     // Obtiene todas las cocinas de la base de datos y las agrupa por la columna 'categoria'
-    $categorias = Cocina::all()->groupBy('categoria');
+{
+    // Hacemos el Join pero sin el groupBy para evitar el choque con el modo estricto de MySQL
+    $cocinas = \App\Models\Cocina::join('platos', 'cocinas.id', '=', 'platos.cocina_id')
+        ->select(
+            'cocinas.nombre',
+            'cocinas.imagen_principal as imagen',
+            'platos.nombre as menu_dia',
+            'platos.precio as precio_completo',
+            'cocinas.calificacion',
+            'cocinas.zona',
+            'platos.descripcion'
+        )
+        ->get();
 
-    // Obtiene las zonas únicas para el select del filtro
-    $zonas = Cocina::select('zona')->distinct()->pluck('zona');
+    // Obtenemos las zonas únicas de la tabla cocinas para el filtro
+    $zonas = \App\Models\Cocina::select('zona')
+                ->distinct()
+                ->pluck('zona');
 
-    return view('tu.vista', compact('categorias', 'zonas'));   // Lógica para la home si es necesaria
-    }
+    return view('ecosazon', compact('cocinas', 'zonas'));
+}
 
     /**
      * Muestra la página de Login

@@ -23,8 +23,8 @@
                 <div class="col-lg-7 text-start pe-lg-5">
                     <h3 class="fw-bold text-warning display-5 mb-3">La Cocina de Doña Lety</h3>
                     <p class="fs-4 text-white mb-4" style="line-height: 1.5;">Especialidad en cochinita pibil y antojitos yucatecos hechos a mano con la receta tradicional.</p>
-                    <a href="{{ route('cocina.perfil', 'dona-lety') }}" class="btn btn-success rounded-pill px-5 py-3 fs-5 fw-bold shadow">
-                        Conocer más
+                   <a href="{{ route('cocinas.index') }}" onclick="alert('Esta cocina aún no tiene su perfil completo. Te redirigiremos a la sección general de Cocinas para que explores otras opciones disponibles.');" class="btn btn-success rounded-pill px-5 py-3 fs-5 fw-bold shadow">
+                      Conocer más
                     </a>
                 </div>
                 
@@ -49,7 +49,7 @@
             <div class="col-lg-7 text-start pe-lg-5">
                 <h3 class="fw-bold text-warning display-5 mb-3">Sazón del Puerto</h3>
                 <p class="fs-4 text-white mb-4" style="line-height: 1.5;">Mariscos frescos del día, ceviches y empanadas fritas al momento con la receta secreta.</p>
-                <a href="{{ route('cocina.perfil', 'sazon-del-puerto') }}" class="btn btn-success rounded-pill px-5 py-3 fs-5 fw-bold shadow">
+                <a href="{{ route('cocinas.index') }}" onclick="alert('Esta cocina aún no tiene su perfil completo. Te redirigiremos a la sección general de Cocinas para que explores otras opciones disponibles.');" class="btn btn-success rounded-pill px-5 py-3 fs-5 fw-bold shadow">
                     Conocer más
                 </a>
             </div>
@@ -75,7 +75,7 @@
             <div class="col-lg-7 text-start pe-lg-5">
                 <h3 class="fw-bold text-warning display-5 mb-3">Veggie Maya</h3>
                 <p class="fs-4 text-white mb-4" style="line-height: 1.5;">Opciones cien por ciento basadas en plantas y deliciosas sin perder el auténtico toque regional.</p>
-                <a href="{{ route('cocina.perfil', 'veggie-maya') }}" class="btn btn-success rounded-pill px-5 py-3 fs-5 fw-bold shadow">
+                <a href="{{ route('cocinas.index') }}" onclick="alert('Esta cocina aún no tiene su perfil completo. Te redirigiremos a la sección general de Cocinas para que explores otras opciones disponibles.');" class="btn btn-success rounded-pill px-5 py-3 fs-5 fw-bold shadow">
                     Conocer más
                 </a>
             </div>
