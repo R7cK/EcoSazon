@@ -27,6 +27,7 @@ class EcoSazonController extends Controller
             'platos.precio as precio_completo',
             'cocinas.calificacion',
             'cocinas.zona',
+            'cocinas.categoria',
             'platos.descripcion'
         )
         ->get();
@@ -35,8 +36,10 @@ class EcoSazonController extends Controller
     $zonas = \App\Models\Cocina::select('zona')
                 ->distinct()
                 ->pluck('zona');
+    
+    $categorias = \App\Models\Cocina::select('categoria')->distinct()->pluck('categoria');
 
-    return view('ecosazon', compact('cocinas', 'zonas'));
+    return view('ecosazon', compact('cocinas', 'zonas', 'categorias'));
 }
 
     /**
