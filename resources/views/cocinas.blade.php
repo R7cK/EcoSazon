@@ -106,8 +106,8 @@
                 <div class="input-group search-group-premium mb-2">
                     <select class="form-select border-0 bg-light" id="tipo-busqueda" style="max-width: 100px; font-size: 0.85rem;">
                         <option value="todos">Todo</option>
-                        <option value="nombre">Nom</option>
-                        <option value="categoria">Cat</option>
+                        <option value="nombre">Nombre</option>
+                        <option value="categoria">Categoría</option>
                     </select>
                     <input type="text" id="input-busqueda" class="form-control border-0" placeholder="Ej: Cochinita...">
                 </div>
