@@ -46,4 +46,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function cocina()
+{
+    // Un usuario (socio) tiene una cocina
+    return $this->hasOne(Cocina::class, 'user_id');
+}
 }

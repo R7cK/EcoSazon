@@ -198,32 +198,35 @@ public function ownerDashboard()
     /**
      * Procesa el inicio de sesión e identifica el rol para la redirección
      */
-    public function postLogin(Request $request)
-    {
-        $credentials = $request->validate([
-            'email'    => 'required|email',
-            'password' => 'required',
-        ]);
+  // En app/Http/Controllers/EcoSazonController.php
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            
-            // Verificamos el rol del usuario que acaba de entrar
-            $user = Auth::user();
+public function postLogin(Request $request)
+{
+    $credentials = $request->validate([
+        'email'    => 'required|email',
+        'password' => 'required',
+    ]);
 
-            if ($user->role === 'owner') {
-                // Redirigir a la pantalla de la cocina (Dashboard de Socio)
-                return redirect()->route('owner.dashboard');
-            }
-            
-            // Redirigir a la home común para consumidores
-            return redirect()->intended(route('home'));
+    if (Auth::attempt($credentials)) {
+        $request->session()->regenerate();
+        $user = Auth::user();
+
+        // 1. Redirigir si es Admin
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard');
         }
 
-        return back()->withErrors([
-            'email' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',
-        ])->withInput();
+        // 2. Redirigir si es Dueño (Owner)
+        if ($user->role === 'owner') {
+            return redirect()->route('owner.dashboard');
+        }
+        
+        // 3. Cliente común
+        return redirect()->intended(route('home'));
     }
+
+    return back()->withErrors(['email' => 'Credenciales incorrectas.'])->withInput();
+}
 
     /**
      * Cierra la sesión del usuario
@@ -255,4 +258,26 @@ public function ownerDashboard()
 
         return back()->with('success', '¡Gracias por tu comentario!');
     }
+
+     // En app/Http/Controllers/EcoSazonController.php
+
+public function adminDashboard()
+{
+    // Obtenemos los conteos para las tarjetas
+    $totalUsuarios = User::count();
+    $totalCocinas = Cocina::count();
+    $totalComentarios = \App\Models\Comentario::count();
+
+    // Traemos datos para las tablas
+    $cocinas = Cocina::with('user')->latest()->take(5)->get();
+    $usuariosRecientes = User::latest()->take(6)->get();
+
+    return view('Admin.dashboard', compact(
+        'totalUsuarios', 
+        'totalCocinas', 
+        'totalComentarios', 
+        'cocinas', 
+        'usuariosRecientes'
+    ));
+}
 }

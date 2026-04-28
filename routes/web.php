@@ -3,7 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\EcoSazonController;
-
+use App\Http\Controllers\Admin\AdminCocinaController;
+use App\Http\Controllers\Admin\AdminUserController;
 /*
 |--------------------------------------------------------------------------
 | Rutas Públicas de Navegación
@@ -58,3 +59,11 @@ Route::get('/dashboard', [EcoSazonController::class, 'dashboard'])->name('dashbo
 Route::post('/cocina/{id}/comentario', [EcoSazonController::class, 'storeComentario'])->name('cocina.comentario');
 
 Route::get('Owners/owner/dashboard', [EcoSazonController::class, 'ownerDashboard'])->name('owner.dashboard')->middleware('auth');
+// En routes/web.php
+
+
+
+// routes/web.php
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/dashboard', [EcoSazonController::class, 'adminDashboard'])->name('admin.dashboard');
+});
