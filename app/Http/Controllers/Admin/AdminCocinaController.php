@@ -1,3 +1,4 @@
+<?php
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -23,7 +24,8 @@ class AdminCocinaController extends Controller
             'nombre' => 'required|unique:cocinas',
             'zona' => 'required',
             'categoria' => 'required',
-            'user_id' => 'nullable|exists:users,id'
+            'user_id' => 'nullable|exists:users,id',
+            'estatus' => 'required|in:activa,inactiva',
         ]);
         $data['slug'] = Str::slug($data['nombre']);
         Cocina::create($data);

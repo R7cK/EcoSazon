@@ -253,7 +253,7 @@
 <div class="top-header sticky-top shadow-sm" style="z-index: 1050;">
     <nav class="navbar navbar-expand-md p-0">
         <div class="container position-relative" style="min-height: 100px;"> 
-            <a class="navbar-brand p-0" href="{{ route('home') }}">
+            <a class="navbar-brand p-0" href="{{ Auth::check() ? (Auth::user()->role === 'admin' ? route('admin.dashboard') : (Auth::user()->role === 'owner' ? route('owner.dashboard') : route('home'))) : route('home') }}">
                 <img src="{{ asset('imagenes/logo1.png') }}" alt="EcoSazón" class="logo-img">
             </a>
 
@@ -266,10 +266,8 @@
                     
                     @auth
                         @if(Auth::user()->role === 'admin')
-                            {{-- ENLACES PARA EL ADMINISTRADOR --}}
-                            <a href="{{ route('admin.dashboard') ?? '#' }}" class="nav-link me-md-4 text-dark fw-bold">Panel Admin</a>
-                            {{-- Enlace de cocinas adaptado para el administrador --}}
-                            <a href="#" class="nav-link me-md-4 text-dark">Gestión de Cocinas</a>
+                            <a href="{{ route('admin.dashboard') }}" class="nav-link me-md-4 text-dark fw-bold">Panel Admin</a>
+                            <a href="{{ route('admin.cocinas.index') }}" class="nav-link me-md-4 text-dark">Gestión de Cocinas</a>
                             
                         @elseif(Auth::user()->role === 'owner')
                             {{-- ENLACES PARA EL SOCIO --}}

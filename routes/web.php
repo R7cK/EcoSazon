@@ -59,11 +59,11 @@ Route::get('/dashboard', [EcoSazonController::class, 'dashboard'])->name('dashbo
 Route::post('/cocina/{id}/comentario', [EcoSazonController::class, 'storeComentario'])->name('cocina.comentario');
 
 Route::get('Owners/owner/dashboard', [EcoSazonController::class, 'ownerDashboard'])->name('owner.dashboard')->middleware('auth');
-// En routes/web.php
 
-
-
-// routes/web.php
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [EcoSazonController::class, 'adminDashboard'])->name('admin.dashboard');
+    
+    // Rutas para el CRUD de cocinas (index, create, store, edit, update, destroy)
+    Route::resource('/admin/cocinas', AdminCocinaController::class)->names('admin.cocinas');
+    Route::resource('/admin/usuarios', AdminUserController::class)->names('admin.usuarios');
 });

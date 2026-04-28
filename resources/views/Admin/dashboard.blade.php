@@ -12,17 +12,22 @@
     {{-- Tarjetas de Estadísticas --}}
     <div class="row g-3 mb-5">
         <div class="col-md-3">
-            <div class="card border-0 shadow-sm rounded-4 p-3" style="border-left: 5px solid #FFC107 !important;">
-                <div class="d-flex align-items-center">
-                    <div class="bg-light-warning rounded-circle p-3 me-3">
-                        <i class="fas fa-users fa-2x text-warning"></i>
-                    </div>
-                    <div>
-                        <h6 class="mb-0 text-muted">Usuarios</h6>
-                        <h3 class="fw-bold mb-0">{{ $totalUsuarios }}</h3>
+            <div class="col-md-3">
+            {{-- Envolvemos la tarjeta en un enlace --}}
+            <a href="{{ route('admin.usuarios.index') }}" class="text-decoration-none">
+                <div class="card border-0 shadow-sm rounded-4 p-3 card-hover" style="border-left: 5px solid #FFC107 !important;">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-light-warning rounded-circle p-3 me-3">
+                            <i class="fas fa-users fa-2x text-warning"></i>
+                        </div>
+                        <div>
+                            <h6 class="mb-0 text-muted">Usuarios</h6>
+                            <h3 class="fw-bold mb-0 text-dark">{{ $totalUsuarios }}</h3>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </a>
+        </div>
         </div>
         <div class="col-md-3">
             <div class="card border-0 shadow-sm rounded-4 p-3" style="border-left: 5px solid #198754 !important;">
@@ -58,7 +63,7 @@
             <div class="card border-0 shadow-sm rounded-4">
                 <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
                     <h5 class="mb-0 fw-bold">Cocinas Registradas</h5>
-                    <a href="#" class="btn btn-sm btn-outline-success rounded-pill">Ver todas</a>
+                    <a href="{{ route('admin.cocinas.index') }}" class="btn btn-sm btn-outline-success rounded-pill">Ver todas</a>
                 </div>
                 <div class="table-responsive p-3">
                     <table class="table table-hover align-middle">
@@ -80,9 +85,20 @@
                                 <td><span class="badge bg-success">Activa</span></td>
                                 
                                 <td>
-                                    <button class="btn btn-sm btn-light text-primary"><i class="fas fa-edit"></i></button>
-                                    <button class="btn btn-sm btn-light text-danger"><i class="fas fa-trash"></i></button>
-                                </td>
+                                {{-- Botón para editar --}}
+                                <a href="{{ route('admin.cocinas.edit', $cocina->id) }}" class="btn btn-sm btn-light text-primary" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+
+                                {{-- Formulario para eliminar con confirmación --}}
+                                <form action="{{ route('admin.cocinas.destroy', $cocina->id) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta cocina de forma permanente?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-light text-danger" title="Eliminar">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
                             </tr>
                             @endforeach
                             
@@ -98,8 +114,9 @@
         {{-- Usuarios Recientes --}}
         <div class="col-lg-4">
             <div class="card border-0 shadow-sm rounded-4">
-                <div class="card-header bg-white border-0 py-3">
+                <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
                     <h5 class="mb-0 fw-bold">Nuevos Usuarios</h5>
+                    <a href="{{ route('admin.usuarios.index') }}" class="btn btn-sm btn-outline-warning rounded-pill text-dark">Gestionar</a>
                 </div>
                 <div class="card-body">
                     @foreach($usuariosRecientes as $u)
@@ -130,5 +147,7 @@
     .bg-light-warning { background-color: #fff8e1; }
     .bg-light-info { background-color: #e0f7fa; }
     .rounded-4 { border-radius: 1rem !important; }
+    .card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .card-hover:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; cursor: pointer; }
 </style>
 @endsection

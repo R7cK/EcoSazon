@@ -13,7 +13,7 @@ class Cocina extends Model
 
     // Permitir asignación masiva
     protected $guarded = [];
-
+    protected $fillable = ['nombre', 'slug', 'zona', 'categoria', 'user_id', 'estatus'];
     /**
      * Una cocina tiene muchos platos
      */
