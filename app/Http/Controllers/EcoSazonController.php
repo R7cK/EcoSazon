@@ -268,8 +268,10 @@ public function adminDashboard()
     $totalCocinas = Cocina::count();
     $totalComentarios = \App\Models\Comentario::count();
 
-    // Traemos datos para las tablas
-    $cocinas = Cocina::with('user')->latest()->take(5)->get();
+    // Traemos las cocinas paginadas (ej. 10 por página)
+    $cocinas = Cocina::with('user')->latest()->paginate(10);
+    
+    // Dejamos el límite para los usuarios recientes
     $usuariosRecientes = User::latest()->take(6)->get();
 
     return view('Admin.dashboard', compact(

@@ -265,7 +265,13 @@
                 <div class="navbar-nav ms-auto align-items-center">
                     
                     @auth
-                        @if(Auth::user()->role === 'owner')
+                        @if(Auth::user()->role === 'admin')
+                            {{-- ENLACES PARA EL ADMINISTRADOR --}}
+                            <a href="{{ route('admin.dashboard') ?? '#' }}" class="nav-link me-md-4 text-dark fw-bold">Panel Admin</a>
+                            {{-- Enlace de cocinas adaptado para el administrador --}}
+                            <a href="#" class="nav-link me-md-4 text-dark">Gestión de Cocinas</a>
+                            
+                        @elseif(Auth::user()->role === 'owner')
                             {{-- ENLACES PARA EL SOCIO --}}
                             <a href="{{ route('owner.dashboard') }}" class="nav-link me-md-4 text-dark fw-bold">Mi Tablero</a>
                             <a href="#" class="nav-link me-md-4 text-dark">Mis Platos</a>
@@ -314,7 +320,8 @@
 </div>
 
 {{-- Solo mostramos el Hero general si NO es login/register y si el usuario NO es un Owner --}}
-@if(!Route::is('login') && !Route::is('register') && !Route::is('cocina.perfil') && !(Auth::check() && Auth::user()->role === 'owner'))
+{{-- Solo mostramos el Hero general si NO es login/register y si el usuario NO es un Owner ni Admin --}}
+@if(!Route::is('login') && !Route::is('register') && !Route::is('cocina.perfil') && !(Auth::check() && in_array(Auth::user()->role, ['owner', 'admin'])))
 <div class="hero">
   <div class="hero-content">
     <h1 class="display-3 fw-bold mb-3">@yield('titulo')</h1>

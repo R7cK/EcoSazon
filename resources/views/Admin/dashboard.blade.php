@@ -89,6 +89,9 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="card-footer bg-white border-0 py-3 d-flex justify-content-center">
+                    {{ $cocinas->links('pagination::bootstrap-5') }}
+                </div>
             </div>
         </div>
 
