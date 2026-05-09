@@ -68,7 +68,7 @@
             <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
                 <div class="card-header bg-white border-0 p-4 d-flex justify-content-between align-items-center">
                     <h5 class="fw-bold mb-0"><i class="fas fa-list me-2"></i>Mis Platos</h5>
-                    <button class="btn btn-green btn-sm rounded-pill px-3 shadow-sm">
+                    <button class="btn btn-success btn-sm rounded-pill px-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#nuevoPlatoModal">
                         <i class="fas fa-plus me-1"></i> Nuevo Plato
                     </button>
                 </div>
@@ -95,8 +95,58 @@
                                     <td><span class="badge bg-light text-dark rounded-pill border">{{ $plato->categoria ?? 'General' }}</span></td>
                                     <td class="fw-bold text-success">${{ number_format($plato->precio, 2) }}</td>
                                     <td class="text-end pe-4">
-                                        <button class="btn btn-sm btn-outline-secondary rounded-circle me-1"><i class="fas fa-edit"></i></button>
-                                        <button class="btn btn-sm btn-outline-danger rounded-circle"><i class="fas fa-trash"></i></button>
+                                        <div class="d-flex justify-content-end align-items-center gap-2">
+                                            
+                                            {{-- Botón de Editar --}}
+                                            <button type="button" class="btn btn-sm btn-outline-secondary rounded-circle" data-bs-toggle="modal" data-bs-target="#editarPlatoModal{{ $plato->id }}">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+
+                                            {{-- Botón de Eliminar --}}
+                                            <form action="{{ route('owner.platos.destroy', $plato->id) }}" method="POST" onsubmit="return confirm('¿Borrar este platillo?');" class="m-0">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+
+                                        {{-- Modal para Editar Plato --}}
+                                        <div class="modal fade" id="editarPlatoModal{{ $plato->id }}" tabindex="-1" aria-hidden="true">
+                                            <div class="modal-dialog text-start">
+                                                <form action="{{ route('owner.platos.update', $plato->id) }}" method="POST" class="modal-content">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <div class="modal-header border-0">
+                                                        <h5 class="modal-title fw-bold">Editar Platillo</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="mb-3">
+                                                            <label class="form-label fw-bold">Nombre del Plato</label>
+                                                            <input type="text" name="nombre" class="form-control" value="{{ $plato->nombre }}" required>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label fw-bold">Precio ($)</label>
+                                                            <input type="number" name="precio" step="0.01" class="form-control" value="{{ $plato->precio }}" required>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label fw-bold">Categoría</label>
+                                                            <select name="categoria" class="form-select">
+                                                                <option value="Desayuno" {{ $plato->categoria == 'Desayuno' ? 'selected' : '' }}>Desayuno</option>
+                                                                <option value="Comida" {{ $plato->categoria == 'Comida' ? 'selected' : '' }}>Comida</option>
+                                                                <option value="Bebida" {{ $plato->categoria == 'Bebida' ? 'selected' : '' }}>Bebida</option>
+                                                                <option value="Postre" {{ $plato->categoria == 'Postre' ? 'selected' : '' }}>Postre</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer border-0">
+                                                        <button type="submit" class="btn btn-primary rounded-pill px-4">Guardar Cambios</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                                 @empty
@@ -138,14 +188,84 @@
                 </div>
             </div>
 
-            {{-- Configuración de la Cocina --}}
+           {{-- Ajustes Rápidos --}}
             <div class="card border-0 shadow-sm rounded-4 mt-4 bg-dark text-white p-4">
                 <h6 class="fw-bold mb-3">Ajustes Rápidos</h6>
                 <div class="d-grid gap-2">
-                    <button class="btn btn-outline-light btn-sm rounded-pill text-start"><i class="fas fa-clock me-2"></i> Cambiar Horario</button>
-                    <button class="btn btn-outline-light btn-sm rounded-pill text-start"><i class="fas fa-map-marker-alt me-2"></i> Editar Ubicación</button>
+                    <button type="button" class="btn btn-outline-light btn-sm rounded-pill text-start" data-bs-toggle="modal" data-bs-target="#ajustesCocinaModal">
+                        <i class="fas fa-clock me-2"></i> Cambiar Horario
+                    </button>
+                    <button type="button" class="btn btn-outline-light btn-sm rounded-pill text-start" data-bs-toggle="modal" data-bs-target="#ajustesCocinaModal">
+                        <i class="fas fa-map-marker-alt me-2"></i> Editar Ubicación
+                    </button>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+{{-- Modal para Añadir Nuevo Plato --}}
+<div class="modal fade" id="nuevoPlatoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <form action="{{ route('owner.platos.store') }}" method="POST">
+                @csrf
+                <div class="modal-header border-0 p-4 pb-0">
+                    <h5 class="modal-title fw-bold">Añadir Nuevo Plato</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nombre del Plato</label>
+                        <input type="text" class="form-control" name="nombre" required placeholder="Ej. Enchiladas Verdes">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Precio ($)</label>
+                        <input type="number" step="0.01" class="form-control" name="precio" required placeholder="Ej. 65.00">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Categoría</label>
+                        <select class="form-select" name="categoria">
+                            <option value="Desayuno">Desayuno</option>
+                            <option value="Comida">Comida</option>
+                            <option value="Bebida">Bebida</option>
+                            <option value="Postre">Postre</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 p-4 pt-0">
+                    <button type="submit" class="btn btn-success w-100 rounded-pill py-2">Guardar Plato</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- Modal para Ajustes Rápidos de la Cocina --}}
+<div class="modal fade" id="ajustesCocinaModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <form action="{{ route('owner.cocina.updateAjustes') }}" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="modal-header border-0 p-4 pb-0 text-dark">
+                    <h5 class="modal-title fw-bold">Ajustes de la Cocina</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 text-dark">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Horario de Atención</label>
+                        <input type="text" class="form-control" name="horario" value="{{ $cocina->horario }}" placeholder="Ej. Lunes a Viernes de 8:00 AM a 4:00 PM">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Ubicación (Zona)</label>
+                        <input type="text" class="form-control" name="zona" value="{{ $cocina->zona }}" required placeholder="Ej. Centro, Altabrisa...">
+                    </div>
+                </div>
+                <div class="modal-footer border-0 p-4 pt-0">
+                    <button type="submit" class="btn btn-success w-100 rounded-pill py-2">Guardar Ajustes</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -154,5 +274,6 @@
     .bg-light-success { background-color: #e8f5e9; }
     .bg-light-warning { background-color: #fff8e1; }
     .bg-light-primary { background-color: #e3f2fd; }
+    .btn-outline-secondary:hover { color: white; }
 </style>
 @endsection

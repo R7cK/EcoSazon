@@ -42,35 +42,39 @@
         <div class="col-lg-6">
             <div class="card shadow border-0 p-4" style="border-radius: 20px;">
                 <h4 class="text-center mb-4">Registro de Cocina</h4>
-                <form action="#" method="POST">
-                    <div class="mb-3">
+                <form action="{{ route('owner.cocina.store') }}" method="POST">
+                    @csrf <div class="mb-3">
                         <label class="form-label">Nombre de la Cocina</label>
-                        <input type="text" class="form-control" placeholder="Ej. El Sazón Yucateco" required>
+                        {{-- Agregamos name="nombre" --}}
+                        <input type="text" name="nombre" class="form-control" placeholder="Ej. El Sazón Yucateco" required>
                     </div>
                     
                     <div class="mb-3">
-                       <label class="form-label">Clasificación de Cocina </label>
-                        <select class="form-select">
-                           <option value="barrio">Cocina de Barrio (Menú del día) </option>
-                           <option value="especializada">Cocina Especializada (Dieta específica/Vegana) </option>
+                    <label class="form-label">Clasificación de Cocina </label>
+                    {{-- Agregamos name="categoria" --}}
+                        <select name="categoria" class="form-select">
+                        <option value="Cocina de Barrio">Cocina de Barrio (Menú del día) </option>
+                        <option value="Cocina Especializada">Cocina Especializada (Dieta específica/Vegana) </option>
                         </select>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Ubicación en Mérida (Colonia)</label>
-                        <input type="text" class="form-control" placeholder="Ej. Centro, Altabrisa, Francisco de Montejo" required>
+                        {{-- Agregamos name="zona" --}}
+                        <input type="text" name="zona" class="form-control" placeholder="Ej. Centro, Altabrisa, Francisco de Montejo" required>
                     </div>
 
                     <div class="mb-4">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="waste">
-                            <label class="form-check-input-label small text-muted" for="waste">
+                            <label class="form-check-label small text-muted" for="waste">
                                 Deseo participar en el programa de reducción de desperdicio (ventas en rebaja).
                             </label>
                         </div>
                     </div>
 
-                    <button type="button" onclick="alert('¡Próximamente! El registro para Partners estará habilitado muy pronto.');" class="btn btn-success w-100 rounded-pill py-2">Solicitar Unión</button>
+                    {{-- Cambiamos type="button" por type="submit" y quitamos el alert --}}
+                    <button type="submit" class="btn btn-success w-100 rounded-pill py-2">Solicitar Unión</button>
                 </form>
             </div>
         </div>

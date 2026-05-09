@@ -255,4 +255,106 @@ public function ownerDashboard()
 
         return back()->with('success', '¡Gracias por tu comentario!');
     }
+
+    // 1. Guarda la cocina vinculándola al usuario logueado
+    public function storeCocina(Request $request)
+    {
+        $request->validate([
+            'nombre' => 'required|string|max:255|unique:cocinas,nombre',
+            'zona'   => 'required|string|max:255',
+            'categoria' => 'nullable|string',
+        ]);
+
+        $cocina = new Cocina();
+        $cocina->nombre = $request->nombre;
+        $cocina->slug = \Illuminate\Support\Str::slug($request->nombre);
+        $cocina->zona = $request->zona;
+        $cocina->categoria = $request->categoria;
+        
+        // Datos automáticos o temporales para cumplir con la migración
+        $cocina->descripcion = 'Descripción pendiente...'; 
+        $cocina->imagen_principal = 'default.jpg'; 
+        $cocina->user_id = Auth::id(); // Vincula la cocina contigo
+        
+        $cocina->save();
+
+        // Tras guardar, te mandamos por fin a tu panel
+        return redirect()->route('owner.dashboard')->with('success', '¡Cocina registrada con éxito!');
+    }
+
+    // 2. Guarda un plato nuevo en el menú
+    public function storePlato(Request $request)
+    {
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'precio' => 'required|numeric',
+            'categoria' => 'nullable|string',
+        ]);
+
+        $cocina = Auth::user()->cocina; // Buscamos la cocina del dueño
+
+        $plato = new Plato();
+        $plato->nombre = $request->nombre;
+        $plato->precio = $request->precio;
+        $plato->categoria = $request->categoria;
+        $plato->cocina_id = $cocina->id; // Vinculamos el plato a su cocina
+        $plato->save();
+
+        return back()->with('success', 'Plato añadido correctamente.');
+    }
+    public function destroyPlato($id)
+    {
+        $plato = Plato::findOrFail($id);
+        
+        // Medida de seguridad: verificar que el plato pertenece a la cocina de este dueño
+        if ($plato->cocina_id == Auth::user()->cocina->id) {
+            $plato->delete();
+            return back()->with('success', 'Plato eliminado correctamente.');
+        }
+
+        return back()->with('error', 'No tienes permiso para eliminar este plato.');
+    }
+    public function updatePlato(Request $request, $id)
+    {
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'precio' => 'required|numeric',
+            'categoria' => 'nullable|string',
+        ]);
+
+        $plato = Plato::findOrFail($id);
+
+        // Medida de seguridad: verificar que el plato pertenece a tu cocina
+        if ($plato->cocina_id == Auth::user()->cocina->id) {
+            $plato->nombre = $request->nombre;
+            $plato->precio = $request->precio;
+            $plato->categoria = $request->categoria;
+            $plato->save();
+
+            return back()->with('success', 'Plato actualizado correctamente.');
+        }
+
+        return back()->with('error', 'No tienes permiso para editar este plato.');
+    }
+    public function updateAjustes(Request $request)
+    {
+        // Validamos los datos (horario es opcional, zona es requerida)
+        $request->validate([
+            'horario' => 'nullable|string|max:255',
+            'zona' => 'required|string|max:255',
+        ]);
+
+        // Buscamos la cocina del usuario actual
+        $cocina = Auth::user()->cocina;
+
+        if ($cocina) {
+            $cocina->horario = $request->horario;
+            $cocina->zona = $request->zona;
+            $cocina->save();
+
+            return back()->with('success', 'Ajustes actualizados correctamente.');
+        }
+
+        return back()->with('error', 'Ocurrió un error al actualizar los ajustes.');
+    }
 }
