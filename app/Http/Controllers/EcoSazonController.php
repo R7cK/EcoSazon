@@ -198,32 +198,35 @@ public function ownerDashboard()
     /**
      * Procesa el inicio de sesión e identifica el rol para la redirección
      */
-    public function postLogin(Request $request)
-    {
-        $credentials = $request->validate([
-            'email'    => 'required|email',
-            'password' => 'required',
-        ]);
+  // En app/Http/Controllers/EcoSazonController.php
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            
-            // Verificamos el rol del usuario que acaba de entrar
-            $user = Auth::user();
+public function postLogin(Request $request)
+{
+    $credentials = $request->validate([
+        'email'    => 'required|email',
+        'password' => 'required',
+    ]);
 
-            if ($user->role === 'owner') {
-                // Redirigir a la pantalla de la cocina (Dashboard de Socio)
-                return redirect()->route('owner.dashboard');
-            }
-            
-            // Redirigir a la home común para consumidores
-            return redirect()->intended(route('home'));
+    if (Auth::attempt($credentials)) {
+        $request->session()->regenerate();
+        $user = Auth::user();
+
+        // 1. Redirigir si es Admin
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard');
         }
 
-        return back()->withErrors([
-            'email' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',
-        ])->withInput();
+        // 2. Redirigir si es Dueño (Owner)
+        if ($user->role === 'owner') {
+            return redirect()->route('owner.dashboard');
+        }
+        
+        // 3. Cliente común
+        return redirect()->intended(route('home'));
     }
+
+    return back()->withErrors(['email' => 'Credenciales incorrectas.'])->withInput();
+}
 
     /**
      * Cierra la sesión del usuario
@@ -254,107 +257,5 @@ public function ownerDashboard()
         ]);
 
         return back()->with('success', '¡Gracias por tu comentario!');
-    }
-
-    // 1. Guarda la cocina vinculándola al usuario logueado
-    public function storeCocina(Request $request)
-    {
-        $request->validate([
-            'nombre' => 'required|string|max:255|unique:cocinas,nombre',
-            'zona'   => 'required|string|max:255',
-            'categoria' => 'nullable|string',
-        ]);
-
-        $cocina = new Cocina();
-        $cocina->nombre = $request->nombre;
-        $cocina->slug = \Illuminate\Support\Str::slug($request->nombre);
-        $cocina->zona = $request->zona;
-        $cocina->categoria = $request->categoria;
-        
-        // Datos automáticos o temporales para cumplir con la migración
-        $cocina->descripcion = 'Descripción pendiente...'; 
-        $cocina->imagen_principal = 'default.jpg'; 
-        $cocina->user_id = Auth::id(); // Vincula la cocina contigo
-        
-        $cocina->save();
-
-        // Tras guardar, te mandamos por fin a tu panel
-        return redirect()->route('owner.dashboard')->with('success', '¡Cocina registrada con éxito!');
-    }
-
-    // 2. Guarda un plato nuevo en el menú
-    public function storePlato(Request $request)
-    {
-        $request->validate([
-            'nombre' => 'required|string|max:255',
-            'precio' => 'required|numeric',
-            'categoria' => 'nullable|string',
-        ]);
-
-        $cocina = Auth::user()->cocina; // Buscamos la cocina del dueño
-
-        $plato = new Plato();
-        $plato->nombre = $request->nombre;
-        $plato->precio = $request->precio;
-        $plato->categoria = $request->categoria;
-        $plato->cocina_id = $cocina->id; // Vinculamos el plato a su cocina
-        $plato->save();
-
-        return back()->with('success', 'Plato añadido correctamente.');
-    }
-    public function destroyPlato($id)
-    {
-        $plato = Plato::findOrFail($id);
-        
-        // Medida de seguridad: verificar que el plato pertenece a la cocina de este dueño
-        if ($plato->cocina_id == Auth::user()->cocina->id) {
-            $plato->delete();
-            return back()->with('success', 'Plato eliminado correctamente.');
-        }
-
-        return back()->with('error', 'No tienes permiso para eliminar este plato.');
-    }
-    public function updatePlato(Request $request, $id)
-    {
-        $request->validate([
-            'nombre' => 'required|string|max:255',
-            'precio' => 'required|numeric',
-            'categoria' => 'nullable|string',
-        ]);
-
-        $plato = Plato::findOrFail($id);
-
-        // Medida de seguridad: verificar que el plato pertenece a tu cocina
-        if ($plato->cocina_id == Auth::user()->cocina->id) {
-            $plato->nombre = $request->nombre;
-            $plato->precio = $request->precio;
-            $plato->categoria = $request->categoria;
-            $plato->save();
-
-            return back()->with('success', 'Plato actualizado correctamente.');
-        }
-
-        return back()->with('error', 'No tienes permiso para editar este plato.');
-    }
-    public function updateAjustes(Request $request)
-    {
-        // Validamos los datos (horario es opcional, zona es requerida)
-        $request->validate([
-            'horario' => 'nullable|string|max:255',
-            'zona' => 'required|string|max:255',
-        ]);
-
-        // Buscamos la cocina del usuario actual
-        $cocina = Auth::user()->cocina;
-
-        if ($cocina) {
-            $cocina->horario = $request->horario;
-            $cocina->zona = $request->zona;
-            $cocina->save();
-
-            return back()->with('success', 'Ajustes actualizados correctamente.');
-        }
-
-        return back()->with('error', 'Ocurrió un error al actualizar los ajustes.');
     }
 }

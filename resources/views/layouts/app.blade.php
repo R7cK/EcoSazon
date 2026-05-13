@@ -253,7 +253,7 @@
 <div class="top-header sticky-top shadow-sm" style="z-index: 1050;">
     <nav class="navbar navbar-expand-md p-0">
         <div class="container position-relative" style="min-height: 100px;"> 
-            <a class="navbar-brand p-0" href="{{ route('home') }}">
+            <a class="navbar-brand p-0" href="{{ Auth::check() ? (Auth::user()->role === 'admin' ? route('admin.dashboard') : (Auth::user()->role === 'owner' ? route('owner.dashboard') : route('home'))) : route('home') }}">
                 <img src="{{ asset('imagenes/logo1.png') }}" alt="EcoSazón" class="logo-img">
             </a>
 
@@ -265,7 +265,11 @@
                 <div class="navbar-nav ms-auto align-items-center">
                     
                     @auth
-                        @if(Auth::user()->role === 'owner')
+                        @if(Auth::user()->role === 'admin')
+                            <a href="{{ route('admin.dashboard') }}" class="nav-link me-md-4 text-dark fw-bold">Panel Admin</a>
+                            <a href="{{ route('admin.cocinas.index') }}" class="nav-link me-md-4 text-dark">Gestión de Cocinas</a>
+                            
+                        @elseif(Auth::user()->role === 'owner')
                             {{-- ENLACES PARA EL SOCIO --}}
                             <a href="{{ route('owner.dashboard') }}" class="nav-link me-md-4 text-dark fw-bold">Mi Tablero</a>
                             <a href="#" class="nav-link me-md-4 text-dark">Mis Platos</a>
@@ -314,7 +318,8 @@
 </div>
 
 {{-- Solo mostramos el Hero general si NO es login/register y si el usuario NO es un Owner --}}
-@if(!Route::is('login') && !Route::is('register') && !Route::is('cocina.perfil') && !(Auth::check() && Auth::user()->role === 'owner'))
+{{-- Solo mostramos el Hero general si NO es login/register y si el usuario NO es un Owner ni Admin --}}
+@if(!Route::is('login') && !Route::is('register') && !Route::is('cocina.perfil') && !(Auth::check() && in_array(Auth::user()->role, ['owner', 'admin'])))
 <div class="hero">
   <div class="hero-content">
     <h1 class="display-3 fw-bold mb-3">@yield('titulo')</h1>

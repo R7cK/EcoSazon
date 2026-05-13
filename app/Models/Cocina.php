@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Cocina extends Model
 {
@@ -11,26 +13,29 @@ class Cocina extends Model
 
     // Permitir asignación masiva
     protected $guarded = [];
-
-    // Una cocina tiene muchos platos
-    public function platos()
+    protected $fillable = ['nombre', 'slug', 'zona', 'categoria', 'user_id', 'estatus'];
+    /**
+     * Una cocina tiene muchos platos
+     */
+    public function platos(): HasMany
     {
         return $this->hasMany(Plato::class);
     }
-    //Hola estos son cambios de prueba
-    public function comentarios()
-{
-    return $this->hasMany(Comentario::class)->latest();
-}
 
-public function owner()
-{
-    return $this->belongsTo(User::class, 'user_id');
-}
+    /**
+     * Una cocina tiene muchos comentarios
+     */
+    public function comentarios(): HasMany
+    {
+        return $this->hasMany(Comentario::class)->latest();
+    }
 
-public function cocina()
-{
-    // Un usuario (socio) tiene una cocina
-    return $this->hasOne(Cocina::class);
-}
+    /**
+     * Relación con el Usuario (Dueño)
+     * Cambiamos el nombre de 'owner' a 'user' para que coincida con el controlador
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

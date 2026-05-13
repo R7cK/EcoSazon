@@ -3,7 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\EcoSazonController;
-
+use App\Http\Controllers\Admin\AdminCocinaController;
+use App\Http\Controllers\Admin\AdminUserController;
 /*
 |--------------------------------------------------------------------------
 | Rutas Públicas de Navegación
@@ -58,12 +59,3 @@ Route::get('/dashboard', [EcoSazonController::class, 'dashboard'])->name('dashbo
 Route::post('/cocina/{id}/comentario', [EcoSazonController::class, 'storeComentario'])->name('cocina.comentario');
 
 Route::get('Owners/owner/dashboard', [EcoSazonController::class, 'ownerDashboard'])->name('owner.dashboard')->middleware('auth');
-
-Route::middleware(['auth'])->group(function () {
-    Route::get('/owner/dashboard', [EcoSazonController::class, 'ownerDashboard'])->name('owner.dashboard');
-    Route::post('/owner/cocina', [EcoSazonController::class, 'storeCocina'])->name('owner.cocina.store');
-    Route::post('/owner/platos', [EcoSazonController::class, 'storePlato'])->name('owner.platos.store');
-    Route::delete('/owner/platos/{id}', [App\Http\Controllers\EcoSazonController::class, 'destroyPlato'])->name('owner.platos.destroy');
-    Route::put('/owner/platos/{id}', [App\Http\Controllers\EcoSazonController::class, 'updatePlato'])->name('owner.platos.update');
-    Route::put('/owner/cocina/ajustes', [App\Http\Controllers\EcoSazonController::class, 'updateAjustes'])->name('owner.cocina.updateAjustes');
-});
