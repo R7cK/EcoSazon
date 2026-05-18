@@ -70,13 +70,13 @@
                             {{-- Alternador de método --}}
                             <div class="row mb-4">
                                 <div class="col-6">
-                                    <input type="radio" class="btn-check" name="metodo_tarjeta" id="metodo_guardada" value="guardada" {{ $tarjetasGuardadas->count() > 0 ? 'checked' : 'disabled' }} onchange="switchMetodoPago('guardada')">
+                                    <input type="radio" class="btn-check" name="metodo_tarjeta" id="metodo_guardada" value="guardada" {{ old('metodo_tarjeta', $tarjetasGuardadas->count() > 0 ? 'guardada' : 'nueva') === 'guardada' ? 'checked' : '' }} {{ $tarjetasGuardadas->count() === 0 ? 'disabled' : '' }} onchange="switchMetodoPago('guardada')">
                                     <label class="btn btn-outline-secondary w-100 rounded-pill py-2 text-center" for="metodo_guardada">
                                         <i class="fas fa-vault me-1"></i> Tarjetas Guardadas ({{ $tarjetasGuardadas->count() }})
                                     </label>
                                 </div>
                                 <div class="col-6">
-                                    <input type="radio" class="btn-check" name="metodo_tarjeta" id="metodo_nueva" value="nueva" {{ $tarjetasGuardadas->count() === 0 ? 'checked' : '' }} onchange="switchMetodoPago('nueva')">
+                                    <input type="radio" class="btn-check" name="metodo_tarjeta" id="metodo_nueva" value="nueva" {{ old('metodo_tarjeta', $tarjetasGuardadas->count() === 0 ? 'nueva' : '') === 'nueva' ? 'checked' : '' }} onchange="switchMetodoPago('nueva')">
                                     <label class="btn btn-outline-secondary w-100 rounded-pill py-2 text-center" for="metodo_nueva">
                                         <i class="fas fa-plus me-1"></i> Nueva Tarjeta
                                     </label>
@@ -84,9 +84,10 @@
                             </div>
 
                             {{-- SECCIÓN A: SELECCIONAR TARJETA GUARDADA --}}
-                            <div id="seccion_tarjeta_guardada" class="{{ $tarjetasGuardadas->count() > 0 ? '' : 'd-none' }} mb-3">
+                            <div id="seccion_tarjeta_guardada" class="{{ old('metodo_tarjeta', $tarjetasGuardadas->count() > 0 ? 'guardada' : 'nueva') === 'guardada' ? '' : 'd-none' }} mb-3">
                                 <label class="form-label fw-bold small text-secondary">Selecciona una de tus tarjetas:</label>
-                                <select name="tarjeta_id" class="form-select rounded-pill px-3">
+                                {{-- Se agregó el ID select_tarjeta_guardada para el control con JS --}}
+                                <select name="tarjeta_id" id="select_tarjeta_guardada" class="form-select rounded-pill px-3">
                                     @foreach($tarjetasGuardadas as $tj)
                                         <option value="{{ $tj->id }}">
                                             💳 **** **** **** {{ substr($tj->numero_tarjeta, -4) }} | {{ $tj->nombre_titular }} (Saldo Sim: ${{ number_format($tj->balance_simulado, 2) }})
@@ -96,7 +97,7 @@
                             </div>
 
                             {{-- SECCIÓN B: COMPLETAR FORMULARIO DE NUEVA TARJETA --}}
-                            <div id="seccion_tarjeta_nueva" class="{{ $tarjetasGuardadas->count() === 0 ? '' : 'd-none' }}">
+                            <div id="seccion_tarjeta_nueva" class="{{ old('metodo_tarjeta', $tarjetasGuardadas->count() > 0 ? 'guardada' : 'nueva') === 'nueva' ? '' : 'd-none' }}">
                                 <div class="mb-3">
                                     <label class="form-label fw-bold small">Nombre del Titular</label>
                                     <input type="text" name="nombre_titular" id="input_nombre" class="form-control rounded-pill px-3" placeholder="Ej. Juan Pérez" value="{{ old('nombre_titular') }}">
@@ -159,6 +160,8 @@ function switchMetodoPago(tipo) {
     const seccionGuardada = document.getElementById('seccion_tarjeta_guardada');
     const seccionNueva = document.getElementById('seccion_tarjeta_nueva');
     
+    // Obtenemos los campos
+    const selectTarjeta = document.getElementById('select_tarjeta_guardada');
     const inputNombre = document.getElementById('input_nombre');
     const inputNumero = document.getElementById('input_numero');
     const inputMes = document.getElementById('input_mes');
@@ -168,23 +171,41 @@ function switchMetodoPago(tipo) {
         seccionGuardada.classList.remove('d-none');
         seccionNueva.classList.add('d-none');
         
-        inputNombre.required = false;
-        inputNumero.required = false;
-        inputMes.required = false;
-        inputAno.required = false;
+        // Habilitamos la selección guardada
+        if (selectTarjeta) selectTarjeta.disabled = false;
+        
+        // MODIFICACIÓN: Deshabilitamos los campos de nueva tarjeta. 
+        // Al estar deshabilitados, el navegador NI SIQUIERA los manda a Laravel.
+        inputNombre.required = false; inputNombre.disabled = true;
+        inputNumero.required = false; inputNumero.disabled = true;
+        inputMes.required = false; inputMes.disabled = true;
+        inputAno.required = false; inputAno.disabled = true;
     } else {
         seccionGuardada.classList.add('d-none');
         seccionNueva.classList.remove('d-none');
         
-        inputNombre.required = true;
-        inputNumero.required = true;
-        inputMes.required = true;
-        inputAno.required = true;
+        // Deshabilitamos la selección guardada
+        if (selectTarjeta) selectTarjeta.disabled = true;
+        
+        // Volvemos a habilitar los campos de nueva tarjeta
+        inputNombre.required = true; inputNombre.disabled = false;
+        inputNumero.required = true; inputNumero.disabled = false;
+        inputMes.required = true; inputMes.disabled = false;
+        inputAno.required = true; inputAno.disabled = false;
     }
 }
 
 // Controlador del Temporizador en Cuenta Regresiva (5 Minutos)
 document.addEventListener('DOMContentLoaded', function () {
+    // Al cargar la página, verificamos qué radio button está activo 
+    // y aplicamos los disable/required correspondientes
+    const radioGuardada = document.getElementById('metodo_guardada');
+    if (radioGuardada && radioGuardada.checked) {
+        switchMetodoPago('guardada');
+    } else {
+        switchMetodoPago('nueva');
+    }
+
     let totalTime = 300; // 5 minutos expresados en segundos
     const timerElement = document.getElementById('countdown-timer');
 

@@ -41,17 +41,19 @@ class CheckoutController extends Controller
         }
 
         // 1. Validar las reglas del formulario de pago
+        // MODIFICACIÓN: Se añadió la regla "exclude_if" para ignorar totalmente los campos 
+        // de la pestaña que no está activa, evitando conflictos de validación.
         $request->validate([
             'metodo_tarjeta' => 'required|in:nueva,guardada',
-            // Si es nueva tarjeta:
-            'nombre_titular' => 'required_if:metodo_tarjeta,nueva|string|max:255',
-            'numero_tarjeta' => 'required_if:metodo_tarjeta,nueva|numeric|digits:16',
-            'mes_expiracion' => 'required_if:metodo_tarjeta,nueva|numeric|between:1,12',
-            'ano_expiracion' => 'required_if:metodo_tarjeta,nueva|numeric|min:' . date('Y'),
+            // Si es nueva tarjeta (Se ignora si usa guardada):
+            'nombre_titular' => 'exclude_if:metodo_tarjeta,guardada|required_if:metodo_tarjeta,nueva|string|max:255',
+            'numero_tarjeta' => 'exclude_if:metodo_tarjeta,guardada|required_if:metodo_tarjeta,nueva|numeric|digits:16',
+            'mes_expiracion' => 'exclude_if:metodo_tarjeta,guardada|required_if:metodo_tarjeta,nueva|numeric|between:1,12',
+            'ano_expiracion' => 'exclude_if:metodo_tarjeta,guardada|required_if:metodo_tarjeta,nueva|numeric|min:' . date('Y'),
             // El CVV SIEMPRE es requerido en el request para validar la "acción" de compra
             'cvv'            => 'required|numeric|digits_between:3,4', 
-            // Si es tarjeta guardada:
-            'tarjeta_id'     => 'required_if:metodo_tarjeta,guardada|exists:tarjetas,id'
+            // Si es tarjeta guardada (Se ignora si usa nueva):
+            'tarjeta_id'     => 'exclude_if:metodo_tarjeta,nueva|required_if:metodo_tarjeta,guardada|exists:tarjetas,id'
         ]);
 
         // 2. Determinar el origen de la tarjeta y su balance actual
