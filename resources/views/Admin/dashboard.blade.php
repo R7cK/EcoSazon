@@ -8,17 +8,10 @@
             <p class="text-muted">Bienvenido al centro de control de EcoSazón.</p>
         </div>
     </div>
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show rounded-4 mb-4 shadow-sm" role="alert">
-            <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
 
-    {{-- Tarjetas de Estadísticas --}}
+    {{-- Tarjetas de Estadísticas (Ajustadas para ocupar las 12 columnas) --}}
     <div class="row g-3 mb-5">
         <div class="col-md-3">
-            {{-- Envolvemos la tarjeta en un enlace --}}
             <a href="{{ route('admin.usuarios.index') }}" class="text-decoration-none">
                 <div class="card border-0 shadow-sm rounded-4 p-3 card-hover" style="border-left: 5px solid #FFC107 !important;">
                     <div class="d-flex align-items-center">
@@ -35,7 +28,7 @@
         </div>
         
         <div class="col-md-3">
-            <div class="card border-0 shadow-sm rounded-4 p-3" style="border-left: 5px solid #198754 !important;">
+            <div class="card border-0 shadow-sm rounded-4 p-3 card-hover" style="border-left: 5px solid #198754 !important;">
                 <div class="d-flex align-items-center">
                     <div class="bg-light-success rounded-circle p-3 me-3">
                         <i class="fas fa-store fa-2x text-success"></i>
@@ -47,8 +40,9 @@
                 </div>
             </div>
         </div>
+
         <div class="col-md-3">
-            <div class="card border-0 shadow-sm rounded-4 p-3" style="border-left: 5px solid #0dcaf0 !important;">
+            <div class="card border-0 shadow-sm rounded-4 p-3 card-hover" style="border-left: 5px solid #0dcaf0 !important;">
                 <div class="d-flex align-items-center">
                     <div class="bg-light-info rounded-circle p-3 me-3">
                         <i class="fas fa-comment-alt fa-2x text-info"></i>
@@ -60,14 +54,28 @@
                 </div>
             </div>
         </div>
-    </div>
 
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 p-3 card-hover" style="border-left: 5px solid #fd7e14 !important;">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle p-3 me-3" style="background-color: #fff3cd;">
+                        <i class="fas fa-utensils fa-2x" style="color: #fd7e14;"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-0 text-muted">Platillos</h6>
+                        <h3 class="fw-bold mb-0">{{ $totalPlatos }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <div class="row mt-4">
         {{-- Gestión de Cocinas --}}
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm rounded-4">
                 
-                {{-- Modificado: Encabezado con Buscador Integrado --}}
+                {{-- Encabezado con Buscador Integrado --}}
                 <div class="card-header bg-white border-0 py-3 d-flex flex-wrap justify-content-between align-items-center gap-3">
                     <h5 class="mb-0 fw-bold">Cocinas Registradas</h5>
                     
@@ -81,7 +89,6 @@
                 </div>
 
                 <div class="table-responsive p-3 pt-0">
-                    {{-- Modificado: Agregamos el id="tabla-cocinas" para que el JS lo encuentre --}}
                     <table class="table table-hover align-middle" id="tabla-cocinas">
                         <thead class="table-light">
                             <tr>
@@ -96,7 +103,13 @@
                             @foreach($cocinas as $cocina)
                             <tr>
                                 <td class="fw-bold">{{ $cocina->nombre }}</td>
-                                <td>{{ $cocina->user->name ?? 'Sin dueño' }}</td>
+                                <td>
+                                    @if($cocina->user)
+                                        <span class="fw-bold text-dark"><i class="fas fa-key text-warning me-1" title="Socio/Dueño"></i> {{ $cocina->user->name }}</span>
+                                    @else
+                                        <span class="text-danger small"><i class="fas fa-exclamation-triangle me-1"></i> Sin dueño</span>
+                                    @endif
+                                </td>
                                 <td><span class="badge bg-light text-dark border">{{ $cocina->zona }}</span></td>
                                 <td>
                                     <form action="{{ route('admin.cocinas.toggleStatus', $cocina->id) }}" method="POST" class="m-0" onsubmit="return confirm('¿Cambiar el estatus de esta cocina?');">
@@ -113,12 +126,10 @@
                                 </td>
                                 
                                 <td>
-                                    {{-- Botón para editar --}}
                                     <a href="{{ route('admin.cocinas.edit', $cocina->id) }}" class="btn btn-sm btn-light text-primary" title="Editar">
                                         <i class="fas fa-edit"></i>
                                     </a>
 
-                                    {{-- Formulario para eliminar con confirmación --}}
                                     <form action="{{ route('admin.cocinas.destroy', $cocina->id) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta cocina de forma permanente?');">
                                         @csrf
                                         @method('DELETE')
@@ -130,7 +141,7 @@
                             </tr>
                             @endforeach
                             
-                            {{-- Fila de mensaje de "No encontrado" (oculta por defecto) --}}
+                            {{-- Fila de mensaje de "No encontrado" --}}
                             <tr id="sin-resultados-cocinas" style="display: none;">
                                 <td colspan="5" class="text-center py-4 text-muted">
                                     <i class="fas fa-search-minus fs-4 mb-2 d-block"></i>
@@ -156,15 +167,27 @@
                 <div class="card-body">
                     @foreach($usuariosRecientes as $u)
                     <div class="d-flex align-items-center mb-3">
-                        <div class="avatar-sm bg-light rounded-circle p-2 me-3 text-center" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
-                            <i class="fas fa-user text-muted"></i>
+                        {{-- Se agregó lógica para que aparezca la foto en lugar del icono si el usuario la tiene --}}
+                        <div class="avatar-sm bg-light rounded-circle text-center" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid #ddd; margin-right: 15px;">
+                            @if($u->foto)
+                                <img src="{{ asset($u->foto) }}" alt="Foto" class="w-100 h-100 object-fit-cover">
+                            @else
+                                <i class="fas fa-user text-muted"></i>
+                            @endif
                         </div>
                         <div>
                             <p class="mb-0 fw-bold small">{{ $u->name }}</p>
                             <p class="mb-0 text-muted extra-small">{{ $u->email }}</p>
                         </div>
-                        <span class="ms-auto badge {{ $u->role == 'owner' ? 'bg-warning text-dark' : 'bg-light text-dark border' }} small">
-                            {{ $u->role }}
+                        {{-- Identificador de roles mejorado --}}
+                        <span class="ms-auto badge {{ $u->role == 'owner' ? 'bg-warning text-dark' : ($u->role == 'admin' ? 'bg-success' : 'bg-light text-dark border') }} small">
+                            @if($u->role === 'owner')
+                                <i class="fas fa-key me-1"></i> Dueño
+                            @elseif($u->role === 'admin')
+                                <i class="fas fa-shield-alt me-1"></i> Admin
+                            @else
+                                <i class="fas fa-user me-1"></i> Cliente
+                            @endif
                         </span>
                     </div>
                     @endforeach

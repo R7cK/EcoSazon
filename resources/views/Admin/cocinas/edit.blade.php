@@ -34,14 +34,6 @@
                                 @endforeach
                             </select>
                         </div>
-
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Estatus de la Cocina</label>
-                            <select name="estatus" class="form-select rounded-3">
-                                <option value="activa" {{ (isset($cocina) && $cocina->estatus == 'activa') ? 'selected' : '' }}>Activa</option>
-                                <option value="inactiva" {{ (isset($cocina) && $cocina->estatus == 'inactiva') ? 'selected' : '' }}>Inactiva</option>
-                            </select>
-                        </div>
                         <div class="d-flex justify-content-between mt-4">
                             <a href="{{ route('admin.dashboard') }}" class="btn btn-light px-4 rounded-pill">Cancelar</a>
                             <button type="submit" class="btn btn-success px-4 rounded-pill shadow-sm">Actualizar Cocina</button>

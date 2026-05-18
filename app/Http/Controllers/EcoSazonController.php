@@ -18,8 +18,9 @@ class EcoSazonController extends Controller
      */
     public function index()
 {
-    // Hacemos el Join pero sin el groupBy para evitar el choque con el modo estricto de MySQL
+    // Hacemos el Join y agregamos el where para filtrar por estatus
     $cocinas = \App\Models\Cocina::join('platos', 'cocinas.id', '=', 'platos.cocina_id')
+        ->where('cocinas.estatus', 'activa') // <-- NUEVA LÍNEA PARA FILTRAR
         ->select(
             'cocinas.nombre',
             'cocinas.imagen_principal as imagen',
@@ -32,16 +33,19 @@ class EcoSazonController extends Controller
         )
         ->get();
 
-    // Obtenemos las zonas únicas de la tabla cocinas para el filtro
-    $zonas = \App\Models\Cocina::select('zona')
+    // Filtramos zonas y categorías para que solo aparezcan las que tienen cocinas activas
+    $zonas = \App\Models\Cocina::where('estatus', 'activa')
+                ->select('zona')
                 ->distinct()
                 ->pluck('zona');
     
-    $categorias = \App\Models\Cocina::select('categoria')->distinct()->pluck('categoria');
+    $categorias = \App\Models\Cocina::where('estatus', 'activa')
+                ->select('categoria')
+                ->distinct()
+                ->pluck('categoria');
 
     return view('ecosazon', compact('cocinas', 'zonas', 'categorias'));
 }
-
     /**
      * Muestra la página de Login
      */
@@ -112,14 +116,22 @@ public function ownerDashboard()
     }
 
     public function cocinas()
-    {
-        $cocinas = Cocina::withAvg('platos', 'precio')->get();
-        $categorias = $cocinas->groupBy('categoria');
-        $zonas = Cocina::select('zona')->distinct()->pluck('zona');
+{
+    // Solo traemos las cocinas con estatus 'activa'
+    $cocinas = Cocina::where('estatus', 'activa')
+                     ->withAvg('platos', 'precio')
+                     ->get();
+                     
+    $categorias = $cocinas->groupBy('categoria');
+    
+    // También filtramos las zonas para no mostrar zonas de cocinas inactivas
+    $zonas = Cocina::where('estatus', 'activa')
+                   ->select('zona')
+                   ->distinct()
+                   ->pluck('zona');
 
-        return view('cocinas', compact('categorias', 'zonas'));
-    }
-
+    return view('cocinas', compact('categorias', 'zonas'));
+}
     public function perfilCocina($slug)
     {
         $cocina = Cocina::with('platos')->where('slug', $slug)->firstOrFail();
@@ -200,83 +212,71 @@ public function ownerDashboard()
     /**
      * Procesa el registro del usuario e inicia sesión con distinción de rol
      */
-    public function postRegister(Request $request)
-    {
-        // 1. Validación de entradas incluyendo el rol
-        $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'role'     => 'required|in:user,owner', // Validación del nuevo campo de rol
-            'captcha'  => 'required',
-        ]);
-
-        // 2. Validación del Captcha
-        if ($request->captcha !== session('captcha_text')) {
-            return back()->withErrors(['captcha' => 'El código de verificación es incorrecto.'])->withInput();
-        }
-
-        // 3. Creación del usuario con su rol correspondiente
-        $user = User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => Hash::make($request->password),
-            'role'     => $request->role, 
-        ]);
-
-        // 4. ENVÍO DE CORREO DE CONFIRMACIÓN
-        Mail::html("
-            <div style='font-family: sans-serif; border: 1px solid #eee; padding: 20px; border-radius: 10px;'>
-                <h2 style='color: #28a745;'>¡Hola, {$user->name}!</h2>
-                <p>Tu cuenta en <strong>EcoSazón</strong> ha sido creada exitosamente como " . ($user->role === 'owner' ? 'Dueño de Cocina' : 'Cliente') . ".</p>
-                <a href='".route('login')."' style='background-color: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 25px;'>Ir al Login</a>
-            </div>
-        ", function ($message) use ($user) {
-            $message->to($user->email)->subject('¡Bienvenido a EcoSazón!');
-        });
-
-        // 5. Inicio de sesión automático
-        Auth::login($user);
-
-        // 6. Redirección basada en el rol recién creado
-        if ($user->role === 'owner') {
-            return redirect()->route('owner.dashboard')->with('success', '¡Bienvenido Socio! Tu panel de gestión está listo.');
-        }
-
-        return redirect()->route('home')->with('success', 'Cuenta creada exitosamente. Revisa tu correo de bienvenida.');
-    }
-
-    /**
-     * Procesa el inicio de sesión e identifica el rol para la redirección
-     */
-  // En app/Http/Controllers/EcoSazonController.php
-
-public function postLogin(Request $request)
+   public function postRegister(Request $request)
 {
-    $credentials = $request->validate([
-        'email'    => 'required|email',
-        'password' => 'required',
+    // 1. Validación estricta de todos los campos requeridos
+    $request->validate([
+        'name'     => 'required|string|max:255',
+        'apellido' => 'required|string|max:255',
+        'email'    => 'required|string|email|max:255|unique:users',
+        'telefono' => 'required|string|max:20',
+        'foto'     => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+        'password' => 'required|string|min:8|confirmed',
+        'role'     => 'required|in:user,owner', 
+        'captcha'  => 'required',
     ]);
 
-    if (Auth::attempt($credentials)) {
-        $request->session()->regenerate();
-        $user = Auth::user();
-
-        // 1. Redirigir si es Admin
-        if ($user->role === 'admin') {
-            return redirect()->route('admin.dashboard');
-        }
-
-        // 2. Redirigir si es Dueño (Owner)
-        if ($user->role === 'owner') {
-            return redirect()->route('owner.dashboard');
-        }
-        
-        // 3. Cliente común
-        return redirect()->intended(route('home'));
+    // 2. Validación del Captcha
+    if ($request->captcha !== session('captcha_text')) {
+        return back()->withErrors(['captcha' => 'El código de verificación humana es incorrecto.'])->withInput();
     }
 
-    return back()->withErrors(['email' => 'Credenciales incorrectas.'])->withInput();
+    // 3. Procesamiento opcional de la Foto de Perfil
+    $fotoPath = null;
+    if ($request->hasFile('foto')) {
+        $file = $request->file('foto');
+        $filename = time() . '-' . \Illuminate\Support\Str::slug($request->name) . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path('Imagenes/Usuarios'), $filename);
+        $fotoPath = 'Imagenes/Usuarios/' . $filename;
+    }
+
+    // 4. Generar el código numérico de 6 dígitos
+    $codigoVerificacion = rand(100000, 999999);
+
+    // 5. Guardar en la Base de Datos con estado NO VERIFICADO (is_verified = false)
+    // El usuario se crea aquí pero se mantiene bloqueado e inaccesible
+    $user = User::create([
+        'name'              => $request->name,
+        'apellido'          => $request->apellido,
+        'email'             => $request->email,
+        'telefono'          => $request->telefono,
+        'foto'              => $fotoPath,
+        'password'          => Hash::make($request->password),
+        'role'              => $request->role, 
+        'verification_code' => $codigoVerificacion,
+        'is_verified'       => false, // <-- CLAVE: Cuenta inactiva
+    ]);
+
+    // 6. Envío del correo usando las credenciales SMTP configuradas
+    Mail::html("
+        <div style='font-family: sans-serif; border: 1px solid #eee; padding: 20px; border-radius: 10px; max-width: 500px; margin: auto;'>
+            <h2 style='color: #28a745; text-align: center;'>Código de Activación EcoSazón</h2>
+            <p>Hola <strong>{$user->name}</strong>,</p>
+            <p>Introduce el siguiente código en la pantalla de verificación para activar tu cuenta:</p>
+            <div style='background-color: #f8f9fa; border: 1px dashed #28a745; padding: 15px; font-size: 24px; font-weight: bold; text-align: center; letter-spacing: 5px; color: #333; margin: 20px 0;'>
+                {$codigoVerificacion}
+            </div>
+        </div>
+    ", function ($message) use ($user) {
+        $message->to($user->email)->subject('Código de Verificación - EcoSazón');
+    });
+
+    // 7. Guardar el correo en la sesión para que el formulario sepa a qué usuario validar
+    session(['pending_verification_email' => $user->email]);
+
+    // 8. REDIRECCIÓN INMEDIATA Y FORZADA A LA PANTALLA DEL CÓDIGO
+    // Se eliminó el Auth::login() para evitar que asuma el acceso directo
+    return redirect()->route('verify.email')->with('success', 'Se ha enviado un correo de confirmación. Por favor, escribe el código de verificación enviado para activar tu cuenta.');
 }
 
     /**
@@ -502,14 +502,15 @@ public function updateAjustes(Request $request)
 
         return redirect()->route('owner.cocina.ajustes')->with('success', '¡Establecimiento actualizado con éxito!');
     }
-  public function adminDashboard()
+public function adminDashboard()
     {
         // Obtenemos los conteos para las tarjetas
         $totalUsuarios = User::count();
         $totalCocinas = Cocina::count();
         $totalComentarios = \App\Models\Comentario::count();
+        $totalPlatos = \App\Models\Plato::count(); // <-- NUEVA MÉTRICA
 
-        // Traemos datos para las tablas usando paginate() en lugar de get()
+        // Traemos datos para las tablas usando paginate()
         $cocinas = Cocina::with('user')->latest()->paginate(5);
         $usuariosRecientes = User::latest()->paginate(6);
 
@@ -517,8 +518,110 @@ public function updateAjustes(Request $request)
             'totalUsuarios', 
             'totalCocinas', 
             'totalComentarios', 
+            'totalPlatos', // <-- PASAMOS LA VARIABLE A LA VISTA
             'cocinas', 
             'usuariosRecientes'
         ));
     }
+
+    public function postLogin(Request $request)
+{
+    $credentials = $request->validate([
+        'email'    => 'required|email',
+        'password' => 'required',
+    ]);
+
+    if (Auth::attempt($credentials)) {
+        $user = Auth::user();
+
+        // SI NO ESTÁ VERIFICADO, EXPULSARLO Y REDIRIGIRLO A LA PANTALLA DE CÓDIGO
+        if (!$user->is_verified) {
+            Auth::logout();
+            session(['pending_verification_email' => $user->email]);
+            return redirect()->route('verify.email')->with('info', 'Debes verificar tu cuenta primero. Ingresa el código que te enviamos.');
+        }
+
+        $request->session()->regenerate();
+
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+
+        if ($user->role === 'owner') {
+            return redirect()->route('owner.dashboard');
+        }
+        
+        return redirect()->intended(route('home'));
+    }
+
+    return back()->withErrors(['email' => 'Credenciales incorrectas.'])->withInput();
+}
+
+    /**
+ * Muestra la vista para introducir el código enviado.
+ */
+public function showVerifyForm()
+{
+    if (!session()->has('pending_verification_email')) {
+        return redirect()->route('register')->with('error', 'No hay ninguna verificación de cuenta pendiente.');
+    }
+    return view('auth.verify-code');
+}
+
+public function postVerifyCode(Request $request)
+{
+    $request->validate([
+        'code' => 'required|numeric',
+    ]);
+
+    $email = session('pending_verification_email');
+    $user = User::where('email', $email)->first();
+
+    if (!$user || $user->verification_code != $request->code) {
+        return back()->withErrors(['code' => 'El código de verificación es incorrecto o ha expirado.']);
+    }
+
+    // Activación oficial del usuario
+    $user->is_verified = true;
+    $user->verification_code = null; 
+    $user->save();
+
+    session()->forget('pending_verification_email');
+
+    // Ahora sí iniciamos sesión de manera segura
+    Auth::login($user);
+
+    if ($user->role === 'owner') {
+        return redirect()->route('owner.dashboard')->with('success', '¡Cuenta verificada! Panel listo.');
+    }
+
+    return redirect()->route('home')->with('success', 'Tu cuenta ha sido creada y verificada exitosamente.');
+}
+
+public function resendCode()
+{
+    $email = session('pending_verification_email');
+    $user = User::where('email', $email)->where('is_verified', false)->first();
+
+    if (!$user) {
+        return redirect()->route('register')->with('error', 'No se encontró una verificación pendiente.');
+    }
+
+    $nuevoCodigo = rand(100000, 999999);
+    $user->verification_code = $nuevoCodigo;
+    $user->save();
+
+    Mail::html("
+        <div style='font-family: sans-serif; border: 1px solid #eee; padding: 20px; border-radius: 10px; max-width: 500px; margin: auto;'>
+            <h2 style='color: #28a745; text-align: center;'>Tu nuevo código en EcoSazón</h2>
+            <div style='background-color: #f8f9fa; border: 1px dashed #28a745; padding: 15px; font-size: 24px; font-weight: bold; text-align: center; letter-spacing: 5px; color: #333; margin: 20px 0;'>
+                {$nuevoCodigo}
+            </div>
+        </div>
+    ", function ($message) use ($user) {
+        $message->to($user->email)->subject('Nuevo Código de Verificación - EcoSazón');
+    });
+
+    return back()->with('success', 'Se ha reenviado un nuevo código de verificación a tu correo.');
+}
 }

@@ -90,4 +90,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('/admin/cocinas', AdminCocinaController::class)->names('admin.cocinas');
     Route::resource('/admin/usuarios', AdminUserController::class)->names('admin.usuarios');
     Route::patch('/admin/cocinas/{cocina}/toggle-status', [\App\Http\Controllers\Admin\AdminCocinaController::class, 'toggleStatus'])->name('admin.cocinas.toggleStatus');
+    // Rutas de Verificación de Correo Obligatoria
     });
+
+Route::get('/verify-email', [EcoSazonController::class, 'showVerifyForm'])->name('verify.email');
+Route::post('/verify-email', [EcoSazonController::class, 'postVerifyCode'])->name('verify.email.post');
+Route::post('/verify-email/resend', [EcoSazonController::class, 'resendCode'])->name('verify.email.resend');
