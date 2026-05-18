@@ -272,6 +272,9 @@
                         @elseif(Auth::user()->role === 'owner')
                             {{-- ENLACES PARA EL SOCIO --}}
                             <a href="{{ route('owner.dashboard') }}" class="nav-link me-md-4 text-dark fw-bold">Mi Tablero</a>
+                            
+                            <a href="{{ route('owner.cocina.ajustes') }}" class="nav-link me-md-4 text-dark">Ajustes</a>
+                            
                             <a href="#" class="nav-link me-md-4 text-dark">Mis Platos</a>
                             <a href="#" class="nav-link me-md-4 text-dark">Pedidos</a>
                         @else
@@ -279,6 +282,22 @@
                             <a href="{{ route('proposito') }}" class="nav-link me-md-4 text-dark">Propósito</a>
                             <a href="{{ route('planes.index') }}" class="nav-link me-md-4 text-dark">Planes</a>
                             <a href="{{ route('cocinas.index') }}" class="nav-link me-md-4 text-dark">Cocinas</a>
+                            
+                            {{-- Selector de Ubicación (Modal Trigger) --}}
+                            <a href="#" class="nav-link me-md-3 text-dark fw-bold" data-bs-toggle="modal" data-bs-target="#locationModal">
+                                <i class="fas fa-map-marker-alt text-danger me-1"></i> 
+                                {{ session('user_zona', 'Mi Ubicación') }}
+                            </a>
+
+                            {{-- Icono del Carrito --}}
+                            <a href="{{ route('cart.index') }}" class="nav-link me-md-4 text-dark position-relative">
+                                <i class="fas fa-shopping-cart fs-5"></i>
+                                @if(session('cart'))
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success" style="font-size: 0.65rem;">
+                                        {{ count(session('cart')) }}
+                                    </span>
+                                @endif
+                            </a>
                         @endif
                     @endauth
 
@@ -287,11 +306,12 @@
                         <a href="{{ route('proposito') }}" class="nav-link me-md-4 text-dark">Propósito</a>
                         <a href="{{ route('planes.index') }}" class="nav-link me-md-4 text-dark">Planes</a>
                         <a href="{{ route('cocinas.index') }}" class="nav-link me-md-4 text-dark">Cocinas</a>
+
                         <a href="{{ route('login') }}" class="btn btn-success btn-lg rounded-pill px-4 btn-inicio-sesion shadow-sm">Iniciar Sesión</a>
                     @endguest
 
                     @auth
-                        {{-- DROPDOWN DE USUARIO (Se mantiene igual) --}}
+                        {{-- DROPDOWN DE USUARIO --}}
                         <div class="nav-item dropdown ms-md-3">
                             <a class="nav-link dropdown-toggle fw-bold text-dark" href="#" id="navbarUser" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-user-circle me-1" style="color: var(--naranja);"></i>
@@ -317,9 +337,8 @@
     </nav>
 </div>
 
-{{-- Solo mostramos el Hero general si NO es login/register y si el usuario NO es un Owner --}}
-{{-- Solo mostramos el Hero general si NO es login/register y si el usuario NO es un Owner ni Admin --}}
-@if(!Route::is('login') && !Route::is('register') && !Route::is('cocina.perfil') && !(Auth::check() && in_array(Auth::user()->role, ['owner', 'admin'])))
+{{-- MODIFICACIÓN CRÍTICA: Ocultamos el Hero si es login, register, perfil de cocina, panel de admin/owner, o si se visualizan las vistas 'cart.index' (carrito) y 'cocinas.index' (cocinas) --}}
+@if(!Route::is('login') && !Route::is('register') && !Route::is('cocina.perfil') && !Route::is('cart.index') && !Route::is('cocinas.index') && !(Auth::check() && in_array(Auth::user()->role, ['owner', 'admin'])))
 <div class="hero">
   <div class="hero-content">
     <h1 class="display-3 fw-bold mb-3">@yield('titulo')</h1>
@@ -409,7 +428,27 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
+{{-- Modal de Ubicación --}}
+<div class="modal fade" id="locationModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <form action="{{ route('set.location') }}" method="POST">
+                @csrf
+                <div class="modal-header border-0 p-3">
+                    <h6 class="modal-title fw-bold">¿Dónde te encuentras?</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-3 pt-0">
+                    <p class="small text-muted mb-2">Ingresa tu zona para mostrarte las cocinas económicas más cercanas.</p>
+                    <input type="text" name="zona" class="form-control rounded-pill px-3" placeholder="Ej. Centro, Caucel, Altabrisa" value="{{ session('user_zona') }}" required>
+                </div>
+                <div class="modal-footer border-0 p-3 pt-0">
+                    <button type="submit" class="btn btn-primary w-100 rounded-pill">Actualizar Ubicación</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 <script>
     // 1. Control de tamaño de fuente
@@ -458,7 +497,6 @@
     document.addEventListener('keydown', function(e) {
         if (e.key === "ArrowDown" || e.key === "ArrowUp") {
             // Permitir que las flechas también ayuden a navegar entre elementos enfocables
-            // Esto es automático en la mayoría de navegadores, pero reforzamos el scroll
         }
     });
 </script>

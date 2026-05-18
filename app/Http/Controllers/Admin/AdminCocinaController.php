@@ -51,4 +51,12 @@ class AdminCocinaController extends Controller
         $cocina->delete();
         return back()->with('success', 'Cocina eliminada.');
     }
+    public function toggleStatus(Cocina $cocina) {
+        // Si está activa la pasa a inactiva, y viceversa
+        $cocina->estatus = $cocina->estatus === 'activa' ? 'inactiva' : 'activa';
+        $cocina->save();
+        
+        $estado = ucfirst($cocina->estatus);
+        return back()->with('success', "El estatus de la cocina {$cocina->nombre} ahora es: {$estado}.");
+    }
 }

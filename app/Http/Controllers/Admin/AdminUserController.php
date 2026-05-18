@@ -70,4 +70,6 @@ class AdminUserController extends Controller
         $usuario->delete();
         return back()->with('success', 'Usuario eliminado permanentemente.');
     }
+
+    
 }

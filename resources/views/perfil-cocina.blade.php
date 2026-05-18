@@ -18,7 +18,7 @@
                 <div class="col-md-4 text-md-end">
                     <div class="bg-white text-dark d-inline-block rounded-4 p-3 shadow-lg text-center" style="min-width: 150px;">
                         <div class="text-warning fs-3 mb-1">
-                            <i class="fas fa-star"></i> <span class="fw-bold text-dark">{{ $cocina['calificacion'] }}</span>
+                            <i class="fas fa-star"></i> <span class="fw-bold text-dark">{{ $cocina['calificacion'] ?? 'N/A' }}</span>
                         </div>
                         <div class="small fw-bold text-secondary text-uppercase tracking-wide">Aprobación</div>
                     </div>
@@ -29,6 +29,15 @@
 </div>
 
 <div class="container my-5">
+    
+    {{-- ALERTAS PARA NOTIFICAR AL CLIENTE (CARRITO) --}}
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show rounded-4 mb-4 shadow-sm" role="alert">
+            <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <div class="row g-5">
         <div class="col-lg-4">
             <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 sticky-lg-top" style="top: 20px; z-index: 1;">
@@ -54,7 +63,7 @@
                                 <span class="text-muted">{{ $cocina['telefono'] }}</span>
                             </div>
                         </li>
-                        @if($cocina['abierto_24h'])
+                        @if(isset($cocina['abierto_24h']) && $cocina['abierto_24h'])
                         <li class="mt-4">
                             <span class="badge bg-success p-2 w-100 fs-6"><i class="fas fa-check-circle me-1"></i> Abierto 24 Horas</span>
                         </li>
@@ -105,9 +114,23 @@
                             </div>
                             <p class="text-muted small mb-4 flex-grow-1 desc-plato" style="line-height: 1.5;">{{ $item->descripcion }}</p>
                             
-                            <button class="btn btn-outline-success w-100 fw-bold rounded-pill mt-auto py-2">
-                                <i class="fas fa-plus-circle me-2"></i> Agregar al pedido
-                            </button>
+                            {{-- NUEVOS BOTONES DEL CARRITO --}}
+                            <div class="d-flex gap-2 mt-auto">
+                                <form action="{{ route('cart.add', $item->id) }}" method="POST" class="w-50 m-0">
+                                    @csrf
+                                    <button type="submit" class="btn btn-outline-success w-100 rounded-pill shadow-sm py-2 px-1">
+                                        <i class="fas fa-cart-plus"></i> Añadir
+                                    </button>
+                                </form>
+
+                                <form action="{{ route('cart.buyNow', $item->id) }}" method="POST" class="w-50 m-0">
+                                    @csrf
+                                    <button type="submit" class="btn btn-success w-100 rounded-pill shadow-sm py-2 px-1 fw-bold">
+                                        Comprar
+                                    </button>
+                                </form>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -181,7 +204,6 @@
         const mensajeNoResultados = document.getElementById('mensaje-no-platos');
         const tarjetas = document.querySelectorAll('.tarjeta-plato');
 
-        // Actualiza el número de precio visualmente al mover la barra
         if(rangoPrecio) {
             rangoPrecio.addEventListener('input', function() {
                 valorPrecio.textContent = this.value;
@@ -214,7 +236,6 @@
                 }
             });
 
-            // Si hay tarjetas ocultas y coincidencias = 0, mostramos mensaje de error
             if (tarjetas.length > 0) {
                 mensajeNoResultados.style.display = (coincidencias === 0) ? 'block' : 'none';
             }

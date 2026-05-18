@@ -4,6 +4,7 @@
 
 @section('content')
 <div class="container my-5">
+    
     {{-- Encabezado de Bienvenida --}}
     <div class="row mb-4 align-items-center">
         <div class="col-md-8">
@@ -16,6 +17,26 @@
             </span>
         </div>
     </div>
+
+    {{-- ALERTAS DE ÉXITO Y ERROR --}}
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show rounded-4 mb-4 shadow-sm" role="alert">
+            <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show rounded-4 mb-4 shadow-sm" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i><strong>No se pudo guardar la información:</strong>
+            <ul class="mb-0 mt-2 small">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 
     {{-- Tarjetas de Estadísticas --}}
     <div class="row g-4 mb-5">
@@ -88,7 +109,20 @@
                                 <tr>
                                     <td class="ps-4">
                                         <div class="d-flex align-items-center">
-                                            <div class="rounded-3 bg-light me-3" style="width: 45px; height: 45px;"></div>
+                                            <div class="rounded-3 bg-light me-3 overflow-hidden shadow-sm border" style="width: 45px; height: 45px;">
+                                                {{-- CORRECCIÓN DE LA MINIATURA: Renderizado dinámico del path absoluto sin anteponer storage/ --}}
+                                                @php
+                                                    $platoImgUrl = asset('Imagenes/default-cocina.png');
+                                                    if ($plato->imagen) {
+                                                        if (\Illuminate\Support\Str::startsWith($plato->imagen, ['http://', 'https://', 'Imagenes/'])) {
+                                                            $platoImgUrl = asset($plato->imagen);
+                                                        } else {
+                                                            $platoImgUrl = asset('storage/' . $plato->imagen);
+                                                        }
+                                                    }
+                                                @endphp
+                                                <img src="{{ $platoImgUrl }}" alt="{{ $plato->nombre }}" class="w-100 h-100" style="object-fit: cover;">
+                                            </div>
                                             <span class="fw-bold">{{ $plato->nombre }}</span>
                                         </div>
                                     </td>
@@ -103,7 +137,7 @@
                                             </button>
 
                                             {{-- Botón de Eliminar --}}
-                                            <form action="{{ route('owner.platos.destroy', $plato->id) }}" method="POST" onsubmit="return confirm('¿Borrar este platillo?');" class="m-0">
+                                            <form action="{{ route('owner.platos.destroy', $plato->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este platillo?');" class="m-0">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle">
@@ -112,37 +146,55 @@
                                             </form>
                                         </div>
 
-                                        {{-- Modal para Editar Plato --}}
+                                        {{-- Modal para Editar Plato (Corregido con previsualización integrada de la foto asignada) --}}
                                         <div class="modal fade" id="editarPlatoModal{{ $plato->id }}" tabindex="-1" aria-hidden="true">
-                                            <div class="modal-dialog text-start">
-                                                <form action="{{ route('owner.platos.update', $plato->id) }}" method="POST" class="modal-content">
+                                            <div class="modal-dialog text-start modal-lg">
+                                                <form action="{{ route('owner.platos.update', $plato->id) }}" method="POST" enctype="multipart/form-data" class="modal-content rounded-4 border-0 shadow">
                                                     @csrf
                                                     @method('PUT')
-                                                    <div class="modal-header border-0">
+                                                    <div class="modal-header border-0 p-4 pb-0">
                                                         <h5 class="modal-title fw-bold">Editar Platillo</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                     </div>
-                                                    <div class="modal-body">
-                                                        <div class="mb-3">
-                                                            <label class="form-label fw-bold">Nombre del Plato</label>
-                                                            <input type="text" name="nombre" class="form-control" value="{{ $plato->nombre }}" required>
+                                                    <div class="modal-body p-4">
+                                                        <div class="row">
+                                                            <div class="col-md-6 mb-3">
+                                                                <label class="form-label fw-bold small">Nombre del Plato</label>
+                                                                <input type="text" name="nombre" class="form-control rounded-pill px-3" value="{{ $plato->nombre }}" required>
+                                                            </div>
+                                                            <div class="col-md-6 mb-3">
+                                                                <label class="form-label fw-bold small">Precio ($)</label>
+                                                                <input type="number" name="precio" step="0.01" class="form-control rounded-pill px-3" value="{{ $plato->precio }}" required>
+                                                            </div>
                                                         </div>
                                                         <div class="mb-3">
-                                                            <label class="form-label fw-bold">Precio ($)</label>
-                                                            <input type="number" name="precio" step="0.01" class="form-control" value="{{ $plato->precio }}" required>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label class="form-label fw-bold">Categoría</label>
-                                                            <select name="categoria" class="form-select">
+                                                            <label class="form-label fw-bold small">Categoría</label>
+                                                            <select name="categoria" class="form-select rounded-pill px-3">
                                                                 <option value="Desayuno" {{ $plato->categoria == 'Desayuno' ? 'selected' : '' }}>Desayuno</option>
                                                                 <option value="Comida" {{ $plato->categoria == 'Comida' ? 'selected' : '' }}>Comida</option>
                                                                 <option value="Bebida" {{ $plato->categoria == 'Bebida' ? 'selected' : '' }}>Bebida</option>
                                                                 <option value="Postre" {{ $plato->categoria == 'Postre' ? 'selected' : '' }}>Postre</option>
                                                             </select>
                                                         </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label fw-bold small">Descripción del Platillo</label>
+                                                            <textarea name="descripcion" class="form-control p-3" rows="3" style="border-radius: 15px;">{{ $plato->descripcion }}</textarea>
+                                                        </div>
+                                                        
+                                                        <div class="mb-3">
+                                                            <label class="form-label fw-bold small d-block text-center mb-2">Imagen Actual del Platillo</label>
+                                                            
+                                                            {{-- CUADRO DE PREVISUALIZACIÓN DE IMAGEN ASIGNADA --}}
+                                                            <div class="mb-3 position-relative shadow-sm border rounded-4 overflow-hidden mx-auto" style="width: 100%; max-width: 250px; height: 160px; background-color: #f8f9fa;">
+                                                                <img id="preview-plato-edit-{{ $plato->id }}" src="{{ $platoImgUrl }}" alt="Foto del plato" class="w-100 h-100" style="object-fit: cover;">
+                                                            </div>
+
+                                                            <input type="file" name="imagen" class="form-control rounded-pill px-3" accept="image/*" onchange="previewEditPlato(this, 'preview-plato-edit-{{ $plato->id }}')">
+                                                            <small class="text-muted d-block text-center mt-2">Sube una nueva imagen solo si deseas reemplazar la mostrada en pantalla.</small>
+                                                        </div>
                                                     </div>
-                                                    <div class="modal-footer border-0">
-                                                        <button type="submit" class="btn btn-primary rounded-pill px-4">Guardar Cambios</button>
+                                                    <div class="modal-footer border-0 p-4 pt-0">
+                                                        <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm w-100">Guardar Cambios</button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -206,35 +258,62 @@
 
 {{-- Modal para Añadir Nuevo Plato --}}
 <div class="modal fade" id="nuevoPlatoModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content rounded-4 border-0 shadow">
-            <form action="{{ route('owner.platos.store') }}" method="POST">
+            
+            <form action="{{ route('owner.platos.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-header border-0 p-4 pb-0">
                     <h5 class="modal-title fw-bold">Añadir Nuevo Plato</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                
                 <div class="modal-body p-4">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Nombre del Plato</label>
-                        <input type="text" class="form-control" name="nombre" required placeholder="Ej. Enchiladas Verdes">
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold small">Nombre del Plato</label>
+                            <input type="text" class="form-control rounded-pill px-3" name="nombre" required placeholder="Ej. Enchiladas Verdes">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold small">Precio ($)</label>
+                            <input type="number" step="0.01" class="form-control rounded-pill px-3" name="precio" required placeholder="Ej. 65.00">
+                        </div>
                     </div>
+
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Precio ($)</label>
-                        <input type="number" step="0.01" class="form-control" name="precio" required placeholder="Ej. 65.00">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Categoría</label>
-                        <select class="form-select" name="categoria">
+                        <label class="form-label fw-bold small">Categoría</label>
+                        <select class="form-select rounded-pill px-3" name="categoria">
                             <option value="Desayuno">Desayuno</option>
                             <option value="Comida">Comida</option>
                             <option value="Bebida">Bebida</option>
                             <option value="Postre">Postre</option>
                         </select>
                     </div>
-                </div>
+
+                    <div class="mb-3">
+                        <label for="descripcion_plato" class="form-label fw-bold small">Descripción del Platillo</label>
+                        <textarea name="descripcion" id="descripcion_plato" class="form-control p-3" rows="4" 
+                                style="border-radius: 15px;" placeholder="Ej. Delicioso platillo tradicional acompañado de cebolla morada y tortillas hechas a mano...">{{ old('descripcion') }}</textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="imagen_plato" class="form-label fw-bold small">Foto del Platillo</label>
+                        
+                        <div id="contenedor-preview-plato" class="mb-3 position-relative shadow-sm border rounded-4 overflow-hidden d-none mx-auto" style="width: 100%; max-width: 250px; height: 160px; background-color: #f8f9fa;">
+                            <img id="preview-plato-nuevo" src="" alt="Vista previa del plato" class="w-100 h-100" style="object-fit: cover;">
+                        </div>
+
+                        <input type="file" name="imagen" id="imagen_plato" class="form-control rounded-pill px-3" accept="image/*" onchange="previewNuevoPlato(this)">
+                        <small class="text-muted d-block text-center mt-2">Formato recomendado: JPG, PNG, WEBP. (Máx 2MB).</small>
+                    </div>
+                    
+                </div> 
+
                 <div class="modal-footer border-0 p-4 pt-0">
-                    <button type="submit" class="btn btn-success w-100 rounded-pill py-2">Guardar Plato</button>
+                    <button type="submit" class="btn btn-success w-100 rounded-pill py-2 shadow-sm">
+                        <i class="fas fa-plus-circle me-2"></i>Guardar Plato
+                    </button>
                 </div>
             </form>
         </div>
@@ -247,7 +326,6 @@
         <div class="modal-content rounded-4 border-0 shadow">
             <form action="{{ route('owner.cocina.updateAjustes') }}" method="POST">
                 @csrf
-                @method('PUT')
                 <div class="modal-header border-0 p-4 pb-0 text-dark">
                     <h5 class="modal-title fw-bold">Ajustes de la Cocina</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -262,6 +340,10 @@
                         <input type="text" class="form-control" name="zona" value="{{ $cocina->zona }}" required placeholder="Ej. Centro, Altabrisa...">
                     </div>
                 </div>
+                <input type="hidden" name="nombre" value="{{ $cocina->nombre }}">
+                <input type="hidden" name="categoria" value="{{ $cocina->categoria }}">
+                <input type="hidden" name="descripcion" value="{{ $cocina->descripcion }}">
+
                 <div class="modal-footer border-0 p-4 pt-0">
                     <button type="submit" class="btn btn-success w-100 rounded-pill py-2">Guardar Ajustes</button>
                 </div>
@@ -269,6 +351,38 @@
         </div>
     </div>
 </div>
+
+{{-- SCRIPTS JAVASCRIPT REORGANIZADOS --}}
+<script>
+// Handler para la vista previa al CREAR un plato
+function previewNuevoPlato(input) {
+    const preview = document.getElementById('preview-plato-nuevo');
+    const contenedor = document.getElementById('contenedor-preview-plato');
+    
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            contenedor.classList.remove('d-none');
+        }
+        reader.readAsDataURL(input.files[0]);
+    } else {
+        preview.src = "";
+        contenedor.classList.add('d-none'); 
+    }
+}
+
+// Handler para cambiar la vista previa en tiempo real al EDITAR un plato
+function previewEditPlato(input, imgElementId) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById(imgElementId).src = e.target.result;
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
 
 <style>
     .bg-light-success { background-color: #e8f5e9; }
