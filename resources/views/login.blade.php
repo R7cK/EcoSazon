@@ -5,7 +5,7 @@
 @section('content')
 
 {{-- CONTENEDOR DE FONDO CON FILTRO OSCURO: Ocupa toda la pantalla 100vh --}}
-<div class="auth-bg d-flex align-items-center" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url('{{ asset('imagenes/ima.avif') }}') center/cover no-repeat; min-height: 100vh; padding: 40px 0;">
+<div class="auth-bg d-flex align-items-center" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url('{{ asset('imagenes/Pasillo.png') }}') center/cover no-repeat; min-height: 100vh; padding: 40px 0;">
 
     <div class="container py-5">
         <div class="row justify-content-center">
