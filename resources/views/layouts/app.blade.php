@@ -25,7 +25,6 @@
       font-size: 1.15rem; 
     }
 
-    /* HEADER GENERAL */
     .top-header{
       background:#F1C40F;
       padding: 10px 0;
@@ -79,9 +78,7 @@
             top: -10px;
         }
 
-        .logo-img {
-            height: 110px;
-        }
+        .logo-img { height: 110px; }
 
         .navbar-toggler {
             margin-left: auto;
@@ -106,9 +103,7 @@
             font-size: 1.25rem;
         }
 
-        .nav-link:last-child {
-            border-bottom: none;
-        }
+        .nav-link:last-child { border-bottom: none; }
     }
 
     @media (min-width: 768px) {
@@ -129,9 +124,7 @@
             transition: width 0.3s;
         }
 
-        .nav-link:not(.dropdown-toggle):hover::after {
-            width: 100%;
-        }
+        .nav-link:not(.dropdown-toggle):hover::after { width: 100%; }
     }
 
     .btn-orange{
@@ -197,8 +190,8 @@
 </head>
 <body>
 
-{{-- MODIFICACIÓN: El navbar NO aparecerá en las rutas de login ni register --}}
-@if(!Route::is('register') && !Route::is('login'))
+{{-- MODIFICACIÓN: El navbar NO aparecerá en login, register ni en verify.email --}}
+@if(!Route::is('register') && !Route::is('login') && !Route::is('verify.email'))
 <div class="top-header sticky-top shadow-sm" style="z-index: 1050;">
     <nav class="navbar navbar-expand-md p-0">
         <div class="container position-relative" style="min-height: 100px;"> 
@@ -298,7 +291,8 @@
 @endif
 {{-- FIN CONDICIONAL DE NAVBAR --}}
 
-@if(!Route::is('login') && !Route::is('register') && !Route::is('cocina.perfil') && !Route::is('cart.index') && !Route::is('cocinas.index') && !(Auth::check() && in_array(Auth::user()->role, ['owner', 'admin'])))
+{{-- MODIFICACIÓN CRÍTICA: Se excluye el Hero de la ruta verify.email también --}}
+@if(!Route::is('login') && !Route::is('register') && !Route::is('verify.email') && !Route::is('cocina.perfil') && !Route::is('cart.index') && !Route::is('cocinas.index') && !(Auth::check() && in_array(Auth::user()->role, ['owner', 'admin'])))
 <div class="hero">
   <div class="hero-content">
     <h1 class="display-3 fw-bold mb-3">@yield('titulo')</h1>
@@ -316,8 +310,8 @@
     @yield('content')
 </div>
 
-{{-- MODIFICACIÓN: El Footer NO aparecerá en las rutas de login ni register para dejar el fondo limpio --}}
-@if(!Route::is('register') && !Route::is('login'))
+{{-- MODIFICACIÓN: El Footer NO aparecerá en las rutas de Auth para dejar el fondo limpio --}}
+@if(!Route::is('register') && !Route::is('login') && !Route::is('verify.email'))
 <footer class="bg-dark text-white pt-5 pb-4 mt-5">
     <div class="container text-center text-md-start">
         <div class="row text-center text-md-start mb-4">

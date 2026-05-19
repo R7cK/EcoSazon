@@ -624,4 +624,30 @@ public function resendCode()
 
     return back()->with('success', 'Se ha reenviado un nuevo código de verificación a tu correo.');
 }
+/**
+     * Cancela el registro a medias, borra al usuario temporal y vuelve al login
+     */
+    public function cancelVerification()
+    {
+        $email = session('pending_verification_email');
+        
+        if ($email) {
+            // Buscamos al usuario que tiene ese correo pero que AÚN NO está verificado
+            $user = \App\Models\User::where('email', $email)->where('is_verified', false)->first();
+            
+            if ($user) {
+                // Borramos la foto física si llegó a subir una
+                if ($user->foto && file_exists(public_path($user->foto))) {
+                    unlink(public_path($user->foto));
+                }
+                // Eliminamos el registro de la base de datos para liberar el correo
+                $user->delete();
+            }
+            
+            // Limpiamos la variable de sesión
+            session()->forget('pending_verification_email');
+        }
+
+        return redirect()->route('login')->with('info', 'Se ha cancelado el registro. Puedes volver a intentarlo cuando desees.');
+    }
 }

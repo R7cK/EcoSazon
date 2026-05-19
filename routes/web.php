@@ -93,6 +93,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Rutas de Verificación de Correo Obligatoria
     });
 
+// ✅ LAS RUTAS DE VERIFICACIÓN DEBEN IR AQUÍ (PÚBLICAS)
 Route::get('/verify-email', [EcoSazonController::class, 'showVerifyForm'])->name('verify.email');
 Route::post('/verify-email', [EcoSazonController::class, 'postVerifyCode'])->name('verify.email.post');
 Route::post('/verify-email/resend', [EcoSazonController::class, 'resendCode'])->name('verify.email.resend');
+
+// NUEVA RUTA PARA CANCELAR EL REGISTRO
+Route::get('/verify-email/cancel', [EcoSazonController::class, 'cancelVerification'])->name('verify.email.cancel');
