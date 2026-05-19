@@ -81,24 +81,35 @@ class EcoSazonController extends Controller
     /**
      * Pantalla específica para Dueños de Cocina
      */
-public function ownerDashboard()
-{
-    $user = Auth::user();
-    
-    // Obtenemos la cocina vinculada al usuario logueado
-    $cocina = Cocina::where('user_id', $user->id)->first();
+/**
+     * Pantalla específica para Dueños de Cocina
+     */
+    public function ownerDashboard()
+    {
+        $user = Auth::user();
+        
+        // 1. Obtenemos la cocina vinculada al usuario logueado usando tu método original
+        $cocina = \App\Models\Cocina::where('user_id', $user->id)->first();
 
-    // Si el socio aún no ha registrado su cocina, lo redirigimos
-    if (!$cocina) {
-        return redirect()->route('partner.register')
-            ->with('info', 'Bienvenido. Primero completa el registro de tu cocina.');
+        // 2. VALIDACIÓN CRÍTICA: Si el socio aún no ha registrado su cocina, lo redirigimos
+        // (Esto evita el error "Attempt to read property 'platos' on null")
+        if (!$cocina) {
+            return redirect()->route('partner.register')
+                ->with('info', 'Bienvenido. Primero completa el registro de tu cocina.');
+        }
+
+        // 3. Obtenemos platos y comentarios
+        $platos = $cocina->platos;
+        $comentarios = $cocina->comentarios()->with('user')->latest()->take(5)->get();
+
+        // 4. NUEVO: Obtenemos los detalles de pedidos que coincidan con el nombre de esta cocina
+        $pedidosPendientes = \App\Models\PedidoDetalle::with('pedido')
+            ->where('cocina_nombre', $cocina->nombre)
+            ->latest()
+            ->get();
+
+        return view('Owners.owner_dashboard', compact('cocina', 'platos', 'comentarios', 'pedidosPendientes'));
     }
-
-    $platos = $cocina->platos;
-    $comentarios = $cocina->comentarios()->with('user')->latest()->take(5)->get();
-
-    return view('Owners.owner_dashboard', compact('cocina', 'platos', 'comentarios'));
-}
 
     public function partner()
     {
@@ -649,5 +660,58 @@ public function resendCode()
         }
 
         return redirect()->route('login')->with('info', 'Se ha cancelado el registro. Puedes volver a intentarlo cuando desees.');
+    }
+
+
+public function updatePedidoEstatus(\Illuminate\Http\Request $request, $id)
+    {
+        $request->validate([
+            'estatus' => 'required|in:pendiente,en entrega,entregado,cancelado'
+        ]);
+
+        $cocina = \App\Models\Cocina::where('user_id', \Illuminate\Support\Facades\Auth::id())->firstOrFail();
+        
+        // Añadimos ->with('pedido') para traer la orden principal junta
+        $detalle = \App\Models\PedidoDetalle::with('pedido')->findOrFail($id);
+
+        // Seguridad: Verificar que el pedido es realmente de esta cocina
+        if ($detalle->cocina_nombre !== $cocina->nombre) {
+            abort(403, 'No tienes permiso para modificar este pedido.');
+        }
+
+        // --- NUEVA LÓGICA DE REEMBOLSO Y RECIBO ---
+        // Si el dueño marca como "cancelado" y no estaba cancelado antes...
+        if ($request->estatus === 'cancelado' && $detalle->estatus !== 'cancelado') {
+            
+            $pedido = $detalle->pedido;
+            $montoDevolver = $detalle->subtotal;
+
+            // 1. Restar el platillo cancelado del recibo principal (Tabla Pedidos)
+            $pedido->subtotal -= $montoDevolver;
+            $pedido->total -= $montoDevolver;
+            $pedido->save();
+
+            // 2. Devolver el dinero al cliente (Tabla Tarjetas)
+            if ($pedido->user_id) {
+                // Buscamos la tarjeta asociada a este usuario
+                $tarjeta = \App\Models\Tarjeta::where('user_id', $pedido->user_id)->first();
+                
+                if ($tarjeta) {
+                    $tarjeta->balance_simulado += $montoDevolver;
+                    $tarjeta->save();
+                }
+            }
+        }
+
+        // Finalmente, guardamos el nuevo estado del platillo
+        $detalle->estatus = $request->estatus;
+        $detalle->save();
+
+        // Mensaje dinámico dependiendo de si se canceló o solo cambió de estado
+        $mensaje = $request->estatus === 'cancelado' 
+            ? 'Platillo cancelado. Se ajustó el recibo y se reembolsó el dinero al cliente.' 
+            : 'Estatus del pedido actualizado a: ' . strtoupper($request->estatus);
+
+        return back()->with('success', $mensaje);
     }
 }

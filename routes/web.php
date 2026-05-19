@@ -106,3 +106,11 @@ Route::post('/verify-email/resend', [EcoSazonController::class, 'resendCode'])->
 
 // NUEVA RUTA PARA CANCELAR EL REGISTRO
 Route::get('/verify-email/cancel', [EcoSazonController::class, 'cancelVerification'])->name('verify.email.cancel');
+// Rutas para el Owner (puedes ponerla junto a tus otras rutas owner.*)
+Route::patch('/owner/pedido/{id}/estatus', [EcoSazonController::class, 'updatePedidoEstatus'])->name('owner.pedido.estatus')->middleware('auth');
+
+// Rutas para el Cliente (puedes ponerla dentro del middleware auth junto a mis-compras)
+Route::patch('/cliente/pedido/{id}/confirmar', [App\Http\Controllers\CheckoutController::class, 'confirmarRecepcion'])->name('cliente.pedido.confirmar')->middleware('auth');
+// Rutas para actualización de Estatus de los Pedidos
+Route::patch('/owner/pedido/{id}/estatus', [EcoSazonController::class, 'updatePedidoEstatus'])->name('owner.pedido.estatus')->middleware('auth');
+Route::patch('/cliente/pedido/{id}/confirmar', [App\Http\Controllers\CheckoutController::class, 'confirmarRecepcion'])->name('cliente.pedido.confirmar')->middleware('auth');
