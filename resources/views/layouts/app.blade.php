@@ -25,6 +25,7 @@
       font-size: 1.15rem; 
     }
 
+    /* HEADER GENERAL */
     .top-header{
       background:#F1C40F;
       padding: 10px 0;
@@ -190,7 +191,6 @@
 </head>
 <body>
 
-{{-- MODIFICACIÓN: El navbar NO aparecerá en login, register ni en verify.email --}}
 @if(!Route::is('register') && !Route::is('login') && !Route::is('verify.email'))
 <div class="top-header sticky-top shadow-sm" style="z-index: 1050;">
     <nav class="navbar navbar-expand-md p-0">
@@ -238,9 +238,34 @@
                     @endauth
 
                     @guest
+                        {{-- ENLACES PARA VISITANTES --}}
                         <a href="{{ route('proposito') }}" class="nav-link me-md-4 text-dark">Propósito</a>
                         <a href="{{ route('planes.index') }}" class="nav-link me-md-4 text-dark">Planes</a>
                         <a href="{{ route('cocinas.index') }}" class="nav-link me-md-4 text-dark">Cocinas</a>
+                        
+                        {{-- MODIFICACIÓN: Añadido selector de Ubicación para Invitados --}}
+                        <a href="#" class="nav-link me-md-3 text-dark fw-bold" data-bs-toggle="modal" data-bs-target="#locationModal">
+                            <i class="fas fa-map-marker-alt text-danger me-1"></i> 
+                            {{ session('user_zona', 'Mi Ubicación') }}
+                        </a>
+
+                       {{-- Icono dinámico del Carrito --}}
+                        <a href="{{ route('cart.index') }}" class="nav-link me-md-4 text-dark position-relative">
+                            <i class="fas fa-shopping-cart fs-5"></i>
+                            @if(session('cart'))
+                                @php
+                                    // Sumamos la CANTIDAD total de los artículos en lugar de contar los tipos de platillos
+                                    $totalItems = array_sum(array_column(session('cart'), 'cantidad'));
+                                @endphp
+                                
+                                @if($totalItems > 0)
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success" style="font-size: 0.65rem;">
+                                        {{ $totalItems }}
+                                    </span>
+                                @endif
+                            @endif
+                        </a>
+
                         <a href="{{ route('login') }}" class="btn btn-success btn-lg rounded-pill px-4 btn-inicio-sesion shadow-sm">Iniciar Sesión</a>
                     @endguest
 
@@ -272,6 +297,8 @@
                         <ul class="dropdown-menu dropdown-menu-end rounded-4 p-2 shadow" aria-labelledby="navbarUser">
                             <li><a class="dropdown-item py-2" href="#" onclick="alert('¡La sección de Perfil estará habilitada muy pronto!'); return false;"><i class="fas fa-user-cog me-2"></i>Ajustes de Perfil</a></li>
                             <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item py-2" href="{{ route('mis.compras') }}"><i class="fas fa-shopping-bag me-2"></i>Mis Compras</a></li>
+                            <li><a class="dropdown-item py-2" href="#" onclick="alert('¡La sección de Perfil estará habilitada muy pronto!'); return false;"><i class="fas fa-user-cog me-2"></i>Ajustes de Perfil</a></li>
                             <li>
                                 <form action="{{ route('logout') }}" method="POST" class="m-0 p-0">
                                     @csrf
@@ -289,9 +316,7 @@
     </nav>
 </div>
 @endif
-{{-- FIN CONDICIONAL DE NAVBAR --}}
 
-{{-- MODIFICACIÓN CRÍTICA: Se excluye el Hero de la ruta verify.email también --}}
 @if(!Route::is('login') && !Route::is('register') && !Route::is('verify.email') && !Route::is('cocina.perfil') && !Route::is('cart.index') && !Route::is('cocinas.index') && !(Auth::check() && in_array(Auth::user()->role, ['owner', 'admin'])))
 <div class="hero">
   <div class="hero-content">
@@ -310,7 +335,6 @@
     @yield('content')
 </div>
 
-{{-- MODIFICACIÓN: El Footer NO aparecerá en las rutas de Auth para dejar el fondo limpio --}}
 @if(!Route::is('register') && !Route::is('login') && !Route::is('verify.email'))
 <footer class="bg-dark text-white pt-5 pb-4 mt-5">
     <div class="container text-center text-md-start">
@@ -445,39 +469,3 @@
                 timerProgressBar: true,
             });
         @endif
-    });
-
-    function toggleFontSize() {
-        document.body.classList.toggle('font-large');
-        const isLarge = document.body.classList.contains('font-large');
-        localStorage.setItem('accessibleFont', isLarge);
-    }
-
-    if (localStorage.getItem('accessibleFont') === 'true') {
-        document.body.classList.add('font-large');
-    }
-
-    let synth = window.speechSynthesis;
-    let utterance;
-
-    function readPage() {
-        synth.cancel();
-        const elements = document.querySelectorAll('h1, h2, h3, p, a, label');
-        let fullText = "Iniciando lectura de la página. ";
-        elements.forEach(el => {
-            if (el.innerText.trim() !== "") {
-                fullText += el.innerText + ". ";
-            }
-        });
-        utterance = new SpeechSynthesisUtterance(fullText);
-        utterance.lang = 'es-MX';
-        utterance.rate = 1;       
-        synth.speak(utterance);
-    }
-
-    function stopReading() {
-        synth.cancel();
-    }
-</script>
-</body>
-</html>

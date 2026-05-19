@@ -65,6 +65,12 @@
 
                     <div class="col-md-7 order-md-1">
                         <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+                            @guest
+                            <div class="mb-4 bg-light rounded-4 p-3 border">
+                                <label class="form-label fw-bold small text-dark"><i class="fas fa-envelope text-primary me-2"></i> Correo para Recibo</label>
+                                <input type="email" name="email_invitado" class="form-control rounded-pill px-3" placeholder="tucorreo@ejemplo.com" required>
+                            </div>
+                            @endguest
                             <h5 class="fw-bold mb-4 text-dark">Método de Pago</h5>
 
                             {{-- Alternador de método --}}
@@ -86,7 +92,6 @@
                             {{-- SECCIÓN A: SELECCIONAR TARJETA GUARDADA --}}
                             <div id="seccion_tarjeta_guardada" class="{{ old('metodo_tarjeta', $tarjetasGuardadas->count() > 0 ? 'guardada' : 'nueva') === 'guardada' ? '' : 'd-none' }} mb-3">
                                 <label class="form-label fw-bold small text-secondary">Selecciona una de tus tarjetas:</label>
-                                {{-- Se agregó el ID select_tarjeta_guardada para el control con JS --}}
                                 <select name="tarjeta_id" id="select_tarjeta_guardada" class="form-select rounded-pill px-3">
                                     @foreach($tarjetasGuardadas as $tj)
                                         <option value="{{ $tj->id }}">
@@ -117,10 +122,17 @@
                                     </div>
                                 </div>
                                 
-                                <div class="form-check form-switch p-3 bg-light rounded-4 border mb-4 mt-2">
-                                    <input class="form-check-input ms-0 me-2" type="checkbox" name="guardar_tarjeta" id="guardar_tarjeta" value="1" checked>
-                                    <label class="form-check-label fw-bold small text-secondary" for="guardar_tarjeta">Guardar esta tarjeta de forma segura en mi cuenta (No guardará el CVV)</label>
-                                </div>
+                                {{-- SECCIÓN DINÁMICA: Mostrar opción de guardar solo a usuarios registrados --}}
+                                @auth
+                                    <div class="form-check form-switch p-3 bg-light rounded-4 border mb-4 mt-2">
+                                        <input class="form-check-input ms-0 me-2" type="checkbox" name="guardar_tarjeta" id="guardar_tarjeta" value="1" checked>
+                                        <label class="form-check-label fw-bold small text-secondary" for="guardar_tarjeta">Guardar esta tarjeta de forma segura en mi cuenta (No guardará el CVV)</label>
+                                    </div>
+                                @else
+                                    <div class="alert alert-info py-2 px-3 small mt-2 mb-4 rounded-3 border-0 bg-light text-muted">
+                                        <i class="fas fa-info-circle me-1 text-primary"></i> <a href="{{ route('login') }}" class="fw-bold text-primary text-decoration-none">Inicia sesión</a> para guardar tus tarjetas y agilizar tus futuras compras.
+                                    </div>
+                                @endauth
                             </div>
 
                             {{-- EL CVV SIEMPRE SE SOLICITA POR SEGURIDAD --}}
@@ -174,8 +186,7 @@ function switchMetodoPago(tipo) {
         // Habilitamos la selección guardada
         if (selectTarjeta) selectTarjeta.disabled = false;
         
-        // MODIFICACIÓN: Deshabilitamos los campos de nueva tarjeta. 
-        // Al estar deshabilitados, el navegador NI SIQUIERA los manda a Laravel.
+        // Deshabilitamos los campos de nueva tarjeta
         inputNombre.required = false; inputNombre.disabled = true;
         inputNumero.required = false; inputNumero.disabled = true;
         inputMes.required = false; inputMes.disabled = true;
@@ -197,8 +208,6 @@ function switchMetodoPago(tipo) {
 
 // Controlador del Temporizador en Cuenta Regresiva (5 Minutos)
 document.addEventListener('DOMContentLoaded', function () {
-    // Al cargar la página, verificamos qué radio button está activo 
-    // y aplicamos los disable/required correspondientes
     const radioGuardada = document.getElementById('metodo_guardada');
     if (radioGuardada && radioGuardada.checked) {
         switchMetodoPago('guardada');
@@ -206,25 +215,21 @@ document.addEventListener('DOMContentLoaded', function () {
         switchMetodoPago('nueva');
     }
 
-    let totalTime = 300; // 5 minutos expresados en segundos
+    let totalTime = 300; 
     const timerElement = document.getElementById('countdown-timer');
 
     const countdown = setInterval(function () {
         let minutes = Math.floor(totalTime / 60);
         let seconds = totalTime % 60;
 
-        // Estructuración con ceros a la izquierda
         minutes = minutes < 10 ? '0' + minutes : minutes;
         seconds = seconds < 10 ? '0' + seconds : seconds;
 
         timerElement.textContent = minutes + ':' + seconds;
 
-        // Validación cuando el reloj toca el límite cero
         if (totalTime <= 0) {
             clearInterval(countdown);
             alert('El tiempo de 5 minutos para realizar tu pago simulado ha expirado. Serás redirigido a tu carrito.');
-            
-            // Redirección forzada hacia la pantalla del carrito
             window.location.href = "{{ route('cart.index') }}";
         }
         

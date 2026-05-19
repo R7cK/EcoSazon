@@ -113,11 +113,18 @@
                         </div>
                         <h5 class="fw-bold text-success mb-0">${{ number_format($cocina['precio_completo'], 2) }} MXN</h5>
                     </div>
-                    <div>
-                        <a href="#" class="btn btn-outline-success w-100 fw-bold">
-                            <i class="fas fa-shopping-cart me-2"></i> Ordenar ahora
-                        </a>
+                    
+                    {{-- Formulario para Ordenar con Selector de Cantidad --}}
+                    <div class="mt-auto">
+                        <form action="{{ route('cart.add', $cocina['plato_id'] ?? 0) }}" method="POST" class="d-flex gap-2 align-items-center">
+                            @csrf
+                            <input type="number" name="cantidad" value="1" min="1" max="20" class="form-control text-center rounded-pill" style="width: 80px; border: 1px solid #198754; color: #198754; font-weight: bold;" title="Cantidad">
+                            <button type="submit" class="btn btn-outline-success w-100 fw-bold rounded-pill shadow-sm">
+                                <i class="fas fa-shopping-cart me-2"></i> Ordenar
+                            </button>
+                        </form>
                     </div>
+
                 </div>
             </div>
         </div>

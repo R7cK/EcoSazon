@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Tarjeta;
+use App\Models\Pedido;
+use App\Models\PedidoDetalle;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class CheckoutController extends Controller
 {
-    /**
-     * Muestra la pantalla de confirmación y formulario de pago.
-     */
     public function index()
     {
         $cart = session()->get('cart', []);
@@ -23,15 +25,10 @@ class CheckoutController extends Controller
             $total += $item['precio'] * $item['cantidad'];
         }
 
-        // Recuperar las tarjetas que el usuario ha guardado previamente
-        $tarjetasGuardadas = Tarjeta::where('user_id', Auth::id())->get();
-
+        $tarjetasGuardadas = Auth::check() ? Tarjeta::where('user_id', Auth::id())->get() : collect();
         return view('cart.checkout', compact('cart', 'total', 'tarjetasGuardadas'));
     }
 
-    /**
-     * Procesa la simulación de cobro.
-     */
     public function procesarPago(Request $request)
     {
         $cart = session()->get('cart', []);
@@ -40,65 +37,103 @@ class CheckoutController extends Controller
             $total += $item['precio'] * $item['cantidad'];
         }
 
-        // 1. Validar las reglas del formulario de pago
-        // MODIFICACIÓN: Se añadió la regla "exclude_if" para ignorar totalmente los campos 
-        // de la pestaña que no está activa, evitando conflictos de validación.
+        // Desglose del IVA (16%)
+        $subtotal = $total / 1.16;
+        $iva = $total - $subtotal;
+
         $request->validate([
             'metodo_tarjeta' => 'required|in:nueva,guardada',
-            // Si es nueva tarjeta (Se ignora si usa guardada):
             'nombre_titular' => 'exclude_if:metodo_tarjeta,guardada|required_if:metodo_tarjeta,nueva|string|max:255',
             'numero_tarjeta' => 'exclude_if:metodo_tarjeta,guardada|required_if:metodo_tarjeta,nueva|numeric|digits:16',
             'mes_expiracion' => 'exclude_if:metodo_tarjeta,guardada|required_if:metodo_tarjeta,nueva|numeric|between:1,12',
             'ano_expiracion' => 'exclude_if:metodo_tarjeta,guardada|required_if:metodo_tarjeta,nueva|numeric|min:' . date('Y'),
-            // El CVV SIEMPRE es requerido en el request para validar la "acción" de compra
             'cvv'            => 'required|numeric|digits_between:3,4', 
-            // Si es tarjeta guardada (Se ignora si usa nueva):
-            'tarjeta_id'     => 'exclude_if:metodo_tarjeta,nueva|required_if:metodo_tarjeta,guardada|exists:tarjetas,id'
+            'tarjeta_id'     => 'exclude_if:metodo_tarjeta,nueva|required_if:metodo_tarjeta,guardada|exists:tarjetas,id',
+            'email_invitado' => !Auth::check() ? 'required|email' : 'nullable'
         ]);
 
-        // 2. Determinar el origen de la tarjeta y su balance actual
+        $emailContacto = Auth::check() ? Auth::user()->email : $request->email_invitado;
+
         if ($request->metodo_tarjeta === 'guardada') {
-            // Tarjeta cargada desde la base de datos
-            $tarjeta = Tarjeta::where('id', $request->tarjeta_id)
-                              ->where('user_id', Auth::id())
-                              ->firstOrFail();
+            $tarjeta = Tarjeta::where('id', $request->tarjeta_id)->where('user_id', Auth::id())->firstOrFail();
         } else {
-            // Es una tarjeta nueva. Buscamos si ya se había registrado antes para conservar su saldo,
-            // de lo contrario, creamos una instancia temporal con el saldo inicial de $1,200,000
-            $tarjetaExistente = Tarjeta::where('numero_tarjeta', $request->numero_tarjeta)
-                                       ->where('user_id', Auth::id())
-                                       ->first();
+            $tarjetaExistente = Auth::check() ? Tarjeta::where('numero_tarjeta', $request->numero_tarjeta)->where('user_id', Auth::id())->first() : null;
 
             if ($tarjetaExistente) {
                 $tarjeta = $tarjetaExistente;
             } else {
                 $tarjeta = new Tarjeta();
-                $tarjeta->user_id = Auth::id();
+                $tarjeta->user_id = Auth::id(); // Si es guest, quedará null
                 $tarjeta->nombre_titular = $request->nombre_titular;
                 $tarjeta->numero_tarjeta = $request->numero_tarjeta;
                 $tarjeta->mes_expiracion = $request->mes_expiracion;
                 $tarjeta->ano_expiracion = $request->ano_expiracion;
-                $tarjeta->balance_simulado = 1200000.00; // Saldo por defecto inicial
+                $tarjeta->balance_simulado = 1200000.00; 
             }
         }
 
-        // 3. Validar fondos suficientes
         if ($tarjeta->balance_simulado < $total) {
-            return redirect()->back()->withErrors(['saldo' => 'Fondos insuficientes en la tarjeta simulada (Saldo: $' . number_format($tarjeta->balance_simulado, 2) . ').']);
+            return redirect()->back()->withErrors(['saldo' => 'Fondos insuficientes en la tarjeta.']);
         }
-
-        // 4. Descontar el dinero de la simulación
+        
         $tarjeta->balance_simulado -= $total;
 
-        // 5. Guardar la tarjeta en la BD únicamente si es nueva y marcó la opción,
-        // o si ya existía y solo actualizamos su saldo. ¡NUNCA SE ASIGNA NI GUARDA EL CVV!
-        if ($request->metodo_tarjeta === 'guardada' || $request->has('guardar_tarjeta') || $tarjeta->exists) {
+        if (Auth::check() && ($request->metodo_tarjeta === 'guardada' || $request->has('guardar_tarjeta') || $tarjeta->exists)) {
             $tarjeta->save(); 
         }
 
-        // 6. Limpiar el Carrito de la sesión al completarse la orden exitosamente
-        session()->forget('cart');
+        // GUARDADO DE LA ORDEN EN BASE DE DATOS PARA EL HISTORIAL / RECIBO
+    $pedido = Pedido::create([
+        'user_id' => Auth::id(),
+        'email_contacto' => $emailContacto,
+        'subtotal' => $subtotal,
+        'iva' => $iva,
+        'total' => $total,
+        'notas' => $request->input('detalles', 'Sin comentarios adicionales') // Valor por defecto
+    ]);
 
-        return redirect()->route('cart.index')->with('success', '¡Compra simulada con éxito! Se descontaron $' . number_format($total, 2) . ' MXN de tu tarjeta.');
+        foreach($cart as $item) {
+            PedidoDetalle::create([
+                'pedido_id' => $pedido->id,
+                'plato_nombre' => $item['nombre'],
+                'cocina_nombre' => $item['cocina'],
+                'cantidad' => $item['cantidad'],
+                'precio_unitario' => $item['precio'],
+                'subtotal' => $item['precio'] * $item['cantidad']
+            ]);
+        }
+
+        // ENVÍO DE CORREO AUTOMÁTICO
+        Mail::send('emails.recibo', ['pedido' => $pedido], function($message) use ($emailContacto) {
+            $message->to($emailContacto)->subject('Recibo de tu compra en EcoSazón');
+        });
+
+        session()->forget('cart');
+        return redirect()->route('cart.confirmacion', $pedido->id)->with('success', '¡Compra aprobada!');
+    }
+
+    public function confirmacion($id)
+    {
+        $pedido = Pedido::findOrFail($id);
+        return view('cart.confirmacion', compact('pedido'));
+    }
+
+    public function descargarPdf($id)
+    {
+        $pedido = Pedido::with('detalles')->findOrFail($id);
+        
+        // Evita que otro usuario descargue un recibo ajeno
+        if ($pedido->user_id && $pedido->user_id !== Auth::id()) {
+            abort(403, 'No tienes permiso para ver este recibo.');
+        }
+
+        $pdf = Pdf::loadView('pdf.recibo', compact('pedido'));
+        return $pdf->download('EcoSazon_Orden_' . str_pad($pedido->id, 5, '0', STR_PAD_LEFT) . '.pdf');
+    }
+
+    public function misCompras()
+    {
+        $pedidos = Pedido::where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
+        return view('compras.index', compact('pedidos'));
     }
 }

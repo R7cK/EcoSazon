@@ -20,7 +20,7 @@
                 <li class="mb-2 text-muted"><i class="fas fa-times me-2"></i> Sin envíos gratis</li>
             </ul>
 
-            <a href="{{ route('register') }}" class="btn btn-outline-success w-100 rounded-pill shadow fw-bold border-2">¡PRUEBA BOTON!</a>
+            <a href="{{ route('register') }}" class="btn btn-outline-success w-100 rounded-pill shadow fw-bold border-2">¡UNETE YA!</a>
         </div>
     </div>
 </div>

@@ -114,22 +114,22 @@
                             </div>
                             <p class="text-muted small mb-4 flex-grow-1 desc-plato" style="line-height: 1.5;">{{ $item->descripcion }}</p>
                             
-                            {{-- NUEVOS BOTONES DEL CARRITO --}}
-                            <div class="d-flex gap-2 mt-auto">
-                                <form action="{{ route('cart.add', $item->id) }}" method="POST" class="w-50 m-0">
-                                    @csrf
-                                    <button type="submit" class="btn btn-outline-success w-100 rounded-pill shadow-sm py-2 px-1">
+                            {{-- FORMULARIO UNIFICADO: Cantidad, Añadir y Comprar --}}
+                            <form action="{{ route('cart.add', $item->id) }}" method="POST" class="mt-auto">
+                                @csrf
+                                <div class="d-flex align-items-center gap-2">
+                                    <input type="number" name="cantidad" value="1" min="1" max="20" class="form-control text-center rounded-pill" style="width: 75px; border: 1px solid #198754; color: #198754; font-weight: bold;">
+                                    
+                                    <button type="submit" class="btn btn-outline-success rounded-pill shadow-sm flex-grow-1 px-1">
                                         <i class="fas fa-cart-plus"></i> Añadir
                                     </button>
-                                </form>
 
-                                <form action="{{ route('cart.buyNow', $item->id) }}" method="POST" class="w-50 m-0">
-                                    @csrf
-                                    <button type="submit" class="btn btn-success w-100 rounded-pill shadow-sm py-2 px-1 fw-bold">
+                                    {{-- El atributo formaction redirige este botón específico a la ruta buyNow --}}
+                                    <button type="submit" formaction="{{ route('cart.buyNow', $item->id) }}" class="btn btn-success rounded-pill shadow-sm flex-grow-1 px-1 fw-bold">
                                         Comprar
                                     </button>
-                                </form>
-                            </div>
+                                </div>
+                            </form>
 
                         </div>
                     </div>
@@ -150,6 +150,7 @@
         </div>
     </div>
 </div>
+
 <div class="container my-5">
     <hr class="my-5">
     <h3 class="fw-bold mb-4" style="color: #E67E22;">Opiniones de la Comunidad</h3>

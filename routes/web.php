@@ -68,21 +68,27 @@ Route::put('/owner/platos/{id}', [EcoSazonController::class, 'updatePlato'])->na
 Route::get('/owner/cocina/ajustes', [EcoSazonController::class, 'ajustes'])->name('owner.cocina.ajustes')->middleware('auth');
 Route::post('/owner/cocina/update-ajustes', [EcoSazonController::class, 'updateAjustes'])->name('owner.cocina.updateAjustes')->middleware('auth');
 // --- RUTAS PARA EL CLIENTE (CARRITO Y UBICACIÓN) ---
+// --- RUTAS PARA EL CLIENTE (CARRITO Y UBICACIÓN) ---
 Route::post('/set-location', function(\Illuminate\Http\Request $request) {
     session()->put('user_zona', $request->zona);
     return back()->with('success', 'Ubicación actualizada a: ' . $request->zona);
 })->name('set.location');
 
-
 Route::get('/carrito', [App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
 Route::post('/carrito/add/{id}', [App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
 Route::post('/carrito/remove/{id}', [App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
 Route::post('/comprar-ahora/{id}', [App\Http\Controllers\CartController::class, 'buyNow'])->name('cart.buyNow');
-Route::middleware('auth')->group(function() {
-    Route::get('/checkout', [App\Http\Controllers\CheckoutController::class, 'index'])->name('cart.checkout');
-    Route::post('/checkout/pagar', [App\Http\Controllers\CheckoutController::class, 'procesarPago'])->name('cart.pagar'); 
-});
 
+// RUTAS DE PAGO E INVITADOS
+Route::get('/checkout', [App\Http\Controllers\CheckoutController::class, 'index'])->name('cart.checkout');
+Route::post('/checkout/pagar', [App\Http\Controllers\CheckoutController::class, 'procesarPago'])->name('cart.pagar'); 
+Route::get('/checkout/confirmacion/{id}', [App\Http\Controllers\CheckoutController::class, 'confirmacion'])->name('cart.confirmacion');
+Route::get('/checkout/recibo/{id}/pdf', [App\Http\Controllers\CheckoutController::class, 'descargarPdf'])->name('cart.recibo.pdf');
+
+// RUTA PROTEGIDA PARA HISTORIAL (Solo Logueados)
+Route::middleware('auth')->group(function() {
+    Route::get('/mis-compras', [App\Http\Controllers\CheckoutController::class, 'misCompras'])->name('mis.compras');
+});
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [EcoSazonController::class, 'adminDashboard'])->name('admin.dashboard');
     
