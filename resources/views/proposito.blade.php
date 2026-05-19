@@ -9,7 +9,7 @@
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="card border-0 shadow-sm p-4 mb-5" style="border-radius: 20px; background: #f9f9f9;">
-                <h2 class="text-center fw-bold mb-4" style="color: var(--verde);">¿Por qué existimos?</h2>
+                <h2 class="text-center fw-bold mb-4" style="color: var(--verde);">¿Por qué existimo?</h2>
                 <p class="lead text-center">
                     Nuestro objetivo es conectar hogares y oficinas con el sabor local, priorizando la personalización del menú, 
                     el apoyo al comercio de barrio y la movilidad urbana sostenible.

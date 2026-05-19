@@ -1,0 +1,86 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Plato;
+use App\Models\Cocina;
+
+class CartController extends Controller
+{
+    // Mostrar el carrito
+    public function index()
+    {
+        $cart = session()->get('cart', []);
+        $total = 0;
+        foreach($cart as $item) {
+            $total += $item['precio'] * $item['cantidad'];
+        }
+        return view('cart.index', compact('cart', 'total'));
+    }
+
+    // Añadir plato al carrito
+    public function add(Request $request, $id)
+    {
+        $plato = Plato::findOrFail($id);
+        $cart = session()->get('cart', []);
+
+        // Si el plato ya está en el carrito, aumentamos la cantidad
+        if(isset($cart[$id])) {
+            $cart[$id]['cantidad']++;
+        } else {
+            // Si no está, lo añadimos
+            $cart[$id] = [
+                "nombre" => $plato->nombre,
+                "cantidad" => 1,
+                "precio" => $plato->precio,
+                "imagen" => $plato->imagen,
+                "cocina" => $plato->cocina->nombre
+            ];
+        }
+
+        session()->put('cart', $cart);
+
+        return redirect()->back()->with('success', '¡' . $plato->nombre . ' añadido al carrito!');
+    }
+
+    // Comprar Ahora (Borra el carrito anterior, añade el plato y va al checkout)
+    /**
+ * Añade el plato al carrito actual sin borrar nada y redirige directo a pagar.
+ */
+public function buyNow(Request $request, $id)
+{
+    $plato = Plato::findOrFail($id);
+    $cart = session()->get('cart', []);
+
+    // 1. En lugar de sobrescribir, lo sumamos al carrito existente
+    if(isset($cart[$id])) {
+        $cart[$id]['cantidad']++;
+    } else {
+        $cart[$id] = [
+            "nombre" => $plato->nombre,
+            "cantidad" => 1,
+            "precio" => $plato->precio,
+            "imagen" => $plato->imagen,
+            "cocina" => $plato->cocina->nombre
+        ];
+    }
+
+    // 2. Guardamos los cambios en la sesión
+    session()->put('cart', $cart);
+
+    // 3. Redirigimos DIRECTAMENTE a la pantalla de pago (checkout)
+    return redirect()->route('cart.checkout')->with('info', '¡Platillo listo! Tienes 5 minutos para completar tu transacción.');
+}
+
+    // Eliminar un elemento del carrito
+    public function remove($id)
+    {
+        $cart = session()->get('cart');
+        if(isset($cart[$id])) {
+            unset($cart[$id]);
+            session()->put('cart', $cart);
+        }
+        return redirect()->back()->with('success', 'Platillo eliminado del carrito.');
+    }
+}

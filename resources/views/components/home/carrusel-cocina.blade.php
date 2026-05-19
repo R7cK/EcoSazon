@@ -1,5 +1,21 @@
+<style>
+    /* Eliminar la línea naranja gigante de las flechas del carrusel que pidio gongorita */
+    .carousel-control-prev:focus,
+    .carousel-control-next:focus,
+    .carousel-control-prev:active,
+    .carousel-control-next:active,
+    .carousel-control-prev:focus-visible,
+    .carousel-control-next:focus-visible {
+        outline: none !important;
+        box-shadow: none !important;
+        border: none !important;
+        background: transparent !important;
+    }
+</style>
+
 <section class="py-5 bg-white">
-    <div class="container-fluid px-lg-5"> <div class="text-center mb-5">
+    <div class="container-fluid px-lg-5"> 
+        <div class="text-center mb-5">
             <h2 class="fw-bold display-5 text-dark">Cocinas que inspiran</h2>
             <p class="lead text-muted fs-4">Descubre el sazón que está conquistando Mérida hoy.</p>
         </div>
@@ -11,85 +27,95 @@
                 <button type="button" data-bs-target="#carouselCocinas" data-bs-slide-to="2" aria-label="Slide 3"></button>
             </div>
             
-           <div class="carousel-inner h-100">
-    {{-- Slide 1 --}}
-    <div class="carousel-item active h-100">
-        <img src="{{ asset('Imagenes/lety1.png') }}" class="d-block w-100 h-100 object-fit-cover" alt="Platillo Doña Lety">
-        
-        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded-4 p-5 shadow-lg" 
-             style="right: 5%; left: 5%; bottom: 5%; margin: 0 auto;">
-            
-            <div class="row align-items-center">
-                <div class="col-lg-7 text-start pe-lg-5">
-                    <h3 class="fw-bold text-warning display-5 mb-3">La Cocina de Doña Lety</h3>
-                    <p class="fs-4 text-white mb-4" style="line-height: 1.5;">Especialidad en cochinita pibil y antojitos yucatecos hechos a mano con la receta tradicional.</p>
-                    <a href="{{ route('cocina.perfil', 'dona-lety') }}" class="btn btn-success rounded-pill px-5 py-3 fs-5 fw-bold shadow">
-                        Conocer más
-                    </a>
+            <div class="carousel-inner h-100">
+                {{-- Slide 1 --}}
+                <div class="carousel-item active h-100">
+                    <img src="{{ asset('Imagenes/lety1.png') }}" class="d-block w-100 h-100 object-fit-cover" alt="Platillo Doña Lety">
+                    
+                    <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded-4 p-5 shadow-lg" 
+                         style="right: 5%; left: 5%; bottom: 5%; margin: 0 auto;">
+                        
+                        <div class="row align-items-center">
+                            <div class="col-lg-7 text-start pe-lg-5">
+                                <h3 class="fw-bold text-warning display-5 mb-3">La Cocina de Doña Lety</h3>
+                                <p class="fs-4 text-white mb-4" style="line-height: 1.5;">Especialidad en cochinita pibil y antojitos yucatecos hechos a mano con la receta tradicional.</p>
+                                <div>
+                                    <button type="button" class="btn btn-secondary rounded-pill px-5 py-3 fs-5 fw-bold shadow" disabled>
+                                    Conocer más
+                                    </button>
+                                    <p class="mt-2 mb-0 text-white small fw-bold"><i class="fas fa-info-circle me-1"></i> Esta cocina aún no está registrada</p>
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-5 mt-4 mt-lg-0">
+                                <img src="{{ asset('Imagenes/lety2.png') }}" 
+                                     class="w-100 rounded-4 border border-3 border-warning shadow-lg" 
+                                     style="height: 250px; object-fit: cover;" 
+                                     alt="Fachada Doña Lety">
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="col-lg-5 mt-4 mt-lg-0">
-                    <img src="{{ asset('Imagenes/lety2.png') }}" 
-                         class="w-100 rounded-4 border border-3 border-warning shadow-lg" 
-                         style="height: 250px; object-fit: cover;" 
-                         alt="Fachada Doña Lety">
-                </div>
-            </div>
-        </div>
-    </div>
 
-               {{-- Slide 2 --}}
-<div class="carousel-item h-100">
-    <img src="{{ asset('Imagenes/marisco2.png') }}" class="d-block w-100 h-100 object-fit-cover" alt="Platillo Sazón del Puerto">
-    
-    <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded-4 p-5 shadow-lg" 
-         style="right: 5%; left: 5%; bottom: 5%; margin: 0 auto;">
-        
-        <div class="row align-items-center">
-            <div class="col-lg-7 text-start pe-lg-5">
-                <h3 class="fw-bold text-warning display-5 mb-3">Sazón del Puerto</h3>
-                <p class="fs-4 text-white mb-4" style="line-height: 1.5;">Mariscos frescos del día, ceviches y empanadas fritas al momento con la receta secreta.</p>
-                <a href="{{ route('cocina.perfil', 'sazon-del-puerto') }}" class="btn btn-success rounded-pill px-5 py-3 fs-5 fw-bold shadow">
-                    Conocer más
-                </a>
-            </div>
-            
-            <div class="col-lg-5 mt-4 mt-lg-0">
-                <img src="{{ asset('Imagenes/marisco1.png') }}" 
-                     class="w-100 rounded-4 border border-3 border-warning shadow-lg" 
-                     style="height: 250px; object-fit: cover;" 
-                     alt="Fachada Sazón del Puerto">
-            </div>
-        </div>
-    </div>
-</div>
+                {{-- Slide 2 --}}
+                <div class="carousel-item h-100">
+                    <img src="{{ asset('Imagenes/marisco2.png') }}" class="d-block w-100 h-100 object-fit-cover" alt="Platillo Sazón del Puerto">
+                    
+                    <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded-4 p-5 shadow-lg" 
+                         style="right: 5%; left: 5%; bottom: 5%; margin: 0 auto;">
+                        
+                        <div class="row align-items-center">
+                            <div class="col-lg-7 text-start pe-lg-5">
+                                <h3 class="fw-bold text-warning display-5 mb-3">Sazón del Puerto</h3>
+                                <p class="fs-4 text-white mb-4" style="line-height: 1.5;">Mariscos frescos del día, ceviches y empanadas fritas al momento con la receta secreta.</p>
+                                <div>
+                                    <button type="button" class="btn btn-secondary rounded-pill px-5 py-3 fs-5 fw-bold shadow" disabled>
+                                        Conocer más
+                                    </button>
+                                    <p class="mt-2 mb-0 text-white small fw-bold"><i class="fas fa-info-circle me-1"></i> Esta cocina aún no está registrada</p>
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-5 mt-4 mt-lg-0">
+                                <img src="{{ asset('Imagenes/marisco1.png') }}" 
+                                     class="w-100 rounded-4 border border-3 border-warning shadow-lg" 
+                                     style="height: 250px; object-fit: cover;" 
+                                     alt="Fachada Sazón del Puerto">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 {{-- Slide 3 --}}
                 <div class="carousel-item h-100">
-    <img src="{{ asset('Imagenes/Veggie1.png') }}" class="d-block w-100 h-100 object-fit-cover" alt="Fondo Platillo Veggie Maya">
-    
-    <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded-4 p-5 shadow-lg" 
-         style="right: 5%; left: 5%; bottom: 5%; margin: 0 auto;">
-        
-        <div class="row align-items-center">
-            
-            <div class="col-lg-7 text-start pe-lg-5">
-                <h3 class="fw-bold text-warning display-5 mb-3">Veggie Maya</h3>
-                <p class="fs-4 text-white mb-4" style="line-height: 1.5;">Opciones cien por ciento basadas en plantas y deliciosas sin perder el auténtico toque regional.</p>
-                <a href="{{ route('cocina.perfil', 'veggie-maya') }}" class="btn btn-success rounded-pill px-5 py-3 fs-5 fw-bold shadow">
-                    Conocer más
-                </a>
-            </div>
-            
-            <div class="col-lg-5 mt-4 mt-lg-0">
-                <img src="{{ asset('Imagenes/Veggie2.png') }}" 
-                     class="w-100 rounded-4 border border-3 border-warning shadow-lg" 
-                     style="height: 250px; object-fit: cover;" 
-                     alt="Fachada Veggie Maya">
-            </div>
-            
-        </div>
-    </div>
-</div>
+                    <img src="{{ asset('Imagenes/Veggie1.png') }}" class="d-block w-100 h-100 object-fit-cover" alt="Fondo Platillo Veggie Maya">
+                    
+                    <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded-4 p-5 shadow-lg" 
+                         style="right: 5%; left: 5%; bottom: 5%; margin: 0 auto;">
+                        
+                        <div class="row align-items-center">
+                            
+                            <div class="col-lg-7 text-start pe-lg-5">
+                                <h3 class="fw-bold text-warning display-5 mb-3">Veggie Maya</h3>
+                                <p class="fs-4 text-white mb-4" style="line-height: 1.5;">Opciones cien por ciento basadas en plantas y deliciosas sin perder el auténtico toque regional.</p>
+                                <div>
+                                    <button type="button" class="btn btn-secondary rounded-pill px-5 py-3 fs-5 fw-bold shadow" disabled>
+                                        Conocer más
+                                    </button>
+                                    <p class="mt-2 mb-0 text-white small fw-bold"><i class="fas fa-info-circle me-1"></i> Esta cocina aún no está registrada</p>
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-5 mt-4 mt-lg-0">
+                                <img src="{{ asset('Imagenes/Veggie2.png') }}" 
+                                     class="w-100 rounded-4 border border-3 border-warning shadow-lg" 
+                                     style="height: 250px; object-fit: cover;" 
+                                     alt="Fachada Veggie Maya">
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselCocinas" data-bs-slide="prev">

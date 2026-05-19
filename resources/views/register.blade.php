@@ -1,110 +1,160 @@
 @extends('layouts.app')
 
-@section('titulopagina', 'Registro - EcoSazón')
-
 @section('content')
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card border-0 shadow-lg p-4" style="border-radius: 25px;">
-                <div class="text-center mb-4">
-                    <h2 class="fw-bold" style="color: var(--naranja);">Crea tu cuenta</h2>
-                    <p class="text-muted small">Únete a la Logística Verde de Mérida</p>
-                </div>
 
-                <form action="{{ route('register.post') }}" method="POST">
-                    @csrf
+{{-- CONTENEDOR DE FONDO CON FILTRO OSCURO: Ocupa toda la pantalla 100vh --}}
+<div class="auth-bg d-flex align-items-center" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url('{{ asset('imagenes/Pasillo.png') }}') center/cover no-repeat; min-height: 100vh; padding: 40px 0;">
+    
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="card border-0 shadow-lg rounded-4 p-4">
                     
-                    {{-- Selección de Rol (Punto clave para la nueva funcionalidad) --}}
-                    <div class="mb-4 text-center">
-                        <label class="form-label fw-bold small d-block mb-3">¿Cómo usarás EcoSazón?</label>
-                        <div class="d-flex justify-content-center gap-4">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="role" id="roleUser" value="user" {{ old('role', 'user') == 'user' ? 'checked' : '' }}>
-                                <label class="form-check-label small fw-bold" for="roleUser">
-                                    <i class="fas fa-utensils me-1 text-success"></i> Comensal
-                                </label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="role" id="roleOwner" value="owner" {{ old('role') == 'owner' ? 'checked' : '' }}>
-                                <label class="form-check-label small fw-bold" for="roleOwner">
-                                    <i class="fas fa-store me-1 text-warning"></i> Dueño de Cocina
-                                </label>
-                            </div>
-                        </div>
-                        @error('role')
-                            <small class="text-danger d-block mt-2">{{ $message }}</small>
-                        @enderror
+                    {{-- AÑADIMOS EL LOGO AL FORMULARIO PORQUE NO HAY NAVBAR --}}
+                    <div class="text-center mb-4">
+                        <img src="{{ asset('imagenes/logo1.png') }}" alt="EcoSazón Logo" style="height: 70px; margin-bottom: 10px;">
+                        <h2 class="fw-bold text-success">Crea tu Cuenta</h2>
+                        <p class="text-muted small">Únete a EcoSazón como Cliente o Socio de Cocina</p>
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-12 mb-3">
-                            <label for="name" class="form-label fw-bold small">Nombre Completo</label>
-                            <input type="text" id="name" name="name" class="form-control rounded-pill px-3" 
-                                   value="{{ old('name') }}" required autocomplete="name" autofocus>
-                            @error('name')
-                                <small class="text-danger ps-2">{{ $message }}</small>
+                    <form action="{{ route('register.post') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="name" class="form-label small fw-bold text-secondary">Nombre</label>
+                                <input type="text" name="name" id="name" class="form-control rounded-3 @error('name') is-invalid @enderror" value="{{ old('name') }}" required>
+                                @error('name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label for="apellido" class="form-label small fw-bold text-secondary">Apellido</label>
+                                <input type="text" name="apellido" id="apellido" class="form-control rounded-3 @error('apellido') is-invalid @enderror" value="{{ old('apellido') }}" required>
+                                @error('apellido')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label small fw-bold text-secondary">Correo Electrónico</label>
+                            <input type="email" name="email" id="email" class="form-control rounded-3 @error('email') is-invalid @enderror" value="{{ old('email') }}" required>
+                            @error('email')
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                    </div>
 
-                    <div class="mb-3">
-                        <label for="email" class="form-label fw-bold small">Correo Electrónico</label>
-                        <input type="email" id="email" name="email" class="form-control rounded-pill px-3" 
-                               value="{{ old('email') }}" required autocomplete="email" 
-                               placeholder="ejemplo@correo.com">
-                        @error('email')
-                            <small class="text-danger ps-2">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="password" class="form-label fw-bold small">Contraseña</label>
-                            <input type="password" id="password" name="password" class="form-control rounded-pill px-3" 
-                                   required minlength="8" autocomplete="new-password" 
-                                   placeholder="Mínimo 8 caracteres">
-                            @error('password')
-                                <small class="text-danger ps-2">{{ $message }}</small>
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label small fw-bold text-secondary">Número Telefónico</label>
+                            <input type="tel" name="telefono" id="telefono" class="form-control rounded-3 @error('telefono') is-invalid @enderror" value="{{ old('telefono') }}" required>
+                            @error('telefono')
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="password_confirmation" class="form-label fw-bold small">Confirmar Contraseña</label>
-                            <input type="password" id="password_confirmation" name="password_confirmation" 
-                                   class="form-control rounded-pill px-3" required autocomplete="new-password">
-                        </div>
-                    </div>
 
-                    {{-- Sección de Captcha --}}
-                    <div class="mb-4 p-3 bg-light rounded-4 border text-center">
-                        <label for="captcha" class="form-label d-block small fw-bold text-secondary">Código de Verificación</label>
-                        <div class="d-flex justify-content-center align-items-center gap-3">
-                            <div class="bg-dark text-white px-3 py-1 rounded shadow-sm" 
-                                 style="font-family: 'Courier New'; letter-spacing: 5px; font-style: italic; user-select: none; background: linear-gradient(45deg, #222, #444);">
-                                {{ $captcha }}
+                        <div class="mb-3">
+                            <label for="foto" class="form-label small fw-bold text-secondary">Foto de Perfil (Opcional)</label>
+                            <input type="file" name="foto" id="foto" class="form-control rounded-3 @error('foto') is-invalid @enderror" accept="image/*">
+                            @error('foto')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="role" class="form-label small fw-bold text-secondary">¿Cómo deseas unirte?</label>
+                            <select name="role" id="role" class="form-select rounded-3 @error('role') is-invalid @enderror" required>
+                                <option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>Quiero ser Cliente (Descubrir y comprar)</option>
+                                <option value="owner" {{ old('role') == 'owner' ? 'selected' : '' }}>Quiero ser Socio (Gestionar mi cocina)</option>
+                            </select>
+                            @error('role')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label small fw-bold text-secondary">Contraseña</label>
+                            <div class="input-group">
+                                <input type="password" name="password" id="password" class="form-control rounded-start-3 border-end-0 @error('password') is-invalid @enderror" required>
+                                <button class="btn btn-outline-secondary rounded-end-3 border-start-0" type="button" onclick="togglePasswordVisibility('password', 'password-icon')">
+                                    <i class="fas fa-eye text-muted" id="password-icon"></i>
+                                </button>
+                                @error('password')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
                             </div>
-                            <input type="text" id="captcha" name="captcha" 
-                                   class="form-control form-control-sm rounded-pill text-center" 
-                                   style="width: 110px;" placeholder="Código" required>
                         </div>
-                        @error('captcha')
-                            <small class="text-danger d-block mt-2">{{ $message }}</small>
-                        @enderror
-                    </div>
 
-                    <button type="submit" class="btn btn-orange w-100 rounded-pill py-2 shadow mb-4">Registrarse</button>
-
-                    <div class="text-center">
-                        <p class="text-muted small mb-3">O regístrate con:</p>
-                        <div class="d-flex justify-content-center gap-3">
-                            <a href="#" class="btn btn-outline-secondary rounded-circle" title="Google"><i class="fab fa-google"></i></a>
-                            <a href="#" class="btn btn-outline-secondary rounded-circle" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#" class="btn btn-outline-secondary rounded-circle" title="Twitter/X"><i class="fab fa-x-twitter"></i></a>
+                        <div class="mb-3">
+                            <label for="password_confirmation" class="form-label small fw-bold text-secondary">Confirmar Contraseña</label>
+                            <div class="input-group">
+                                <input type="password" name="password_confirmation" id="password_confirmation" class="form-control rounded-start-3 border-end-0" required>
+                                <button class="btn btn-outline-secondary rounded-end-3 border-start-0" type="button" onclick="togglePasswordVisibility('password_confirmation', 'confirm-icon')">
+                                    <i class="fas fa-eye text-muted" id="confirm-icon"></i>
+                                </button>
+                            </div>
                         </div>
+
+                        <div class="mb-4">
+                            <label for="captcha" class="form-label small fw-bold text-secondary">Código de Verificación Humana</label>
+                            <div class="d-flex align-items-center gap-3 mb-2">
+                                <div class="bg-light px-4 py-2 border rounded-3 fw-bold text-center letter-spacing select-none" style="font-family: 'Courier New', Courier, monospace; font-size: 1.25rem;">
+                                    {{ session('captcha_text') }}
+                                </div>
+                                <span class="text-muted small"><i class="fas fa-info-circle"></i> Escribe el código.</span>
+                            </div>
+                            <input type="text" name="captcha" id="captcha" class="form-control rounded-3 @error('captcha') is-invalid @enderror" placeholder="Ingresa el código" required>
+                            @error('captcha')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        {{-- MODIFICACIÓN: BOTONES DE CANCELAR Y REGISTRAR EN BLOQUE --}}
+                        <div class="d-flex gap-2 mt-4">
+                            <a href="{{ route('home') }}" class="btn btn-outline-secondary w-50 rounded-pill py-2 shadow-sm fw-bold">
+                                Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-success w-50 rounded-pill py-2 shadow-sm fw-bold">
+                                Registrarme
+                            </button>
+                        </div>
+
+                    </form>
+
+                    <div class="text-center mt-4 pt-3 border-top">
+                        <p class="text-muted small mb-0">¿Ya tienes una cuenta? <a href="{{ route('login') }}" class="text-success fw-bold text-decoration-none">Inicia Sesión</a></p>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+</div> {{-- FIN DEL CONTENEDOR DE FONDO --}}
+
+<style>
+    .rounded-4 { border-radius: 1rem !important; }
+    .select-none { user-select: none; }
+    .letter-spacing { letter-spacing: 3px; }
+    .input-group .form-control:focus {
+        border-color: #ced4da !important;
+        box-shadow: none !important;
+    }
+</style>
+
+<script>
+function togglePasswordVisibility(inputId, iconId) {
+    const passwordInput = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+    
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+    } else {
+        passwordInput.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+    }
+}
+</script>
 @endsection
