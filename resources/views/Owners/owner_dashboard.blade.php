@@ -146,7 +146,7 @@
                                             </form>
                                         </div>
 
-                                        {{-- Modal para Editar Plato (Corregido con previsualización integrada de la foto asignada) --}}
+                                        {{-- Modal para Editar Plato --}}
                                         <div class="modal fade" id="editarPlatoModal{{ $plato->id }}" tabindex="-1" aria-hidden="true">
                                             <div class="modal-dialog text-start modal-lg">
                                                 <form action="{{ route('owner.platos.update', $plato->id) }}" method="POST" enctype="multipart/form-data" class="modal-content rounded-4 border-0 shadow">
@@ -250,6 +250,96 @@
                     <button type="button" class="btn btn-outline-light btn-sm rounded-pill text-start" data-bs-toggle="modal" data-bs-target="#ajustesCocinaModal">
                         <i class="fas fa-map-marker-alt me-2"></i> Editar Ubicación
                     </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- SECCIÓN DE ÓRDENES / PEDIDOS POR ENTREGAR --}}
+    <div class="row mt-4">
+        <div class="col-12 mb-4">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-white border-0 p-4 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0"><i class="fas fa-shopping-bag me-2 text-primary"></i>Órdenes por Entregar</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light text-muted small uppercase">
+                                <tr>
+                                    <th class="ps-4">No. Pedido</th>
+                                    <th>Fecha</th>
+                                    <th>Plato Solicitado</th>
+                                    <th>Cantidad</th>
+                                    <th>Cliente / Contacto</th>
+                                    <th>Subtotal</th>
+                                    <th>Estatus</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($pedidosPendientes as $detalle)
+                                <tr>
+                                    <td class="ps-4 fw-bold text-secondary">
+                                        #{{ str_pad($detalle->pedido_id, 5, '0', STR_PAD_LEFT) }}
+                                    </td>
+                                    <td>
+                                        <span class="d-block small fw-bold">{{ $detalle->created_at->format('d/m/Y') }}</span>
+                                        <span class="text-muted small">{{ $detalle->created_at->format('h:i A') }}</span>
+                                    </td>
+                                    <td class="fw-bold">{{ $detalle->plato_nombre }}</td>
+                                    <td>
+                                        <span class="badge bg-primary rounded-pill px-3 py-2">{{ $detalle->cantidad }}x</span>
+                                    </td>
+                                    <td>
+                                        <span class="d-block small fw-bold">
+                                            {{ $detalle->pedido->user ? $detalle->pedido->user->name : 'Invitado' }}
+                                        </span>
+                                        <small class="text-muted">{{ $detalle->pedido->email_contacto }}</small>
+                                    </td>
+                                    <td class="fw-bold text-success">
+                                        ${{ number_format($detalle->subtotal, 2) }}
+                                    </td>
+                                    
+                                    {{-- COLUMNA DE INSIGNIA VISUAL --}}
+                                    <td>
+                                        @php $estado = $detalle->estatus ?? 'pendiente'; @endphp
+                                        <span class="badge 
+                                            {{ $estado == 'pendiente' ? 'bg-warning text-dark' : '' }}
+                                            {{ $estado == 'en entrega' ? 'bg-info text-dark' : '' }}
+                                            {{ $estado == 'entregado' ? 'bg-success' : '' }}
+                                            {{ $estado == 'cancelado' ? 'bg-danger' : '' }}">
+                                            {{ strtoupper($estado) }}
+                                        </span>
+                                    </td>
+
+                                    {{-- COLUMNA PARA CAMBIAR ESTATUS RÁPIDAMENTE --}}
+                                    <td>
+                                        <form action="{{ route('owner.pedido.estatus', $detalle->id) }}" method="POST" class="m-0">
+                                            @csrf
+                                            @method('PATCH')
+                                            <select name="estatus" class="form-select form-select-sm rounded-pill" 
+                                                    onchange="this.form.submit()" 
+                                                    {{ in_array($estado, ['entregado', 'cancelado']) ? 'disabled' : '' }}>
+                                                <option value="pendiente" {{ $estado == 'pendiente' ? 'selected' : '' }}>Pendiente</option>
+                                                <option value="en entrega" {{ $estado == 'en entrega' ? 'selected' : '' }}>En Entrega</option>
+                                                <option value="entregado" {{ $estado == 'entregado' ? 'selected' : '' }}>Entregado</option>
+                                                <option value="cancelado" {{ $estado == 'cancelado' ? 'selected' : '' }}>Cancelar Orden</option>
+                                            </select>
+                                        </form>
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="8" class="text-center py-5 text-muted">
+                                        <i class="fas fa-box-open fs-3 mb-2 opacity-50 d-block"></i>
+                                        Aún no hay órdenes pendientes para tu cocina.
+                                    </td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

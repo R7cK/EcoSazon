@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Barryvdh\DomPDF\Facade\Pdf;
 
-
 class CheckoutController extends Controller
 {
     public function index()
@@ -37,9 +36,10 @@ class CheckoutController extends Controller
             $total += $item['precio'] * $item['cantidad'];
         }
 
-        // Desglose del IVA (16%)
-        $subtotal = $total / 1.16;
-        $iva = $total - $subtotal;
+        // --- ELIMINACIÓN DEL IVA ---
+        // El subtotal ahora es exactamente la suma de los platillos y el IVA es 0
+        $subtotal = $total;
+        $iva = 0;
 
         $request->validate([
             'metodo_tarjeta' => 'required|in:nueva,guardada',
@@ -83,14 +83,14 @@ class CheckoutController extends Controller
         }
 
         // GUARDADO DE LA ORDEN EN BASE DE DATOS PARA EL HISTORIAL / RECIBO
-    $pedido = Pedido::create([
-        'user_id' => Auth::id(),
-        'email_contacto' => $emailContacto,
-        'subtotal' => $subtotal,
-        'iva' => $iva,
-        'total' => $total,
-        'notas' => $request->input('detalles', 'Sin comentarios adicionales') // Valor por defecto
-    ]);
+        $pedido = Pedido::create([
+            'user_id' => Auth::id(),
+            'email_contacto' => $emailContacto,
+            'subtotal' => $subtotal,
+            'iva' => $iva,
+            'total' => $total,
+            'notas' => $request->input('detalles', 'Sin comentarios adicionales') // Valor por defecto
+        ]);
 
         foreach($cart as $item) {
             PedidoDetalle::create([
@@ -133,7 +133,24 @@ class CheckoutController extends Controller
 
     public function misCompras()
     {
-        $pedidos = Pedido::where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
+        // Añadimos ->with('detalles') para poder ver los platillos individuales
+        $pedidos = Pedido::with('detalles')->where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
         return view('compras.index', compact('pedidos'));
+    }
+
+    // NUEVO MÉTODO
+    public function confirmarRecepcion($id)
+    {
+        $detalle = PedidoDetalle::findOrFail($id);
+        
+        // Seguridad: Verificar que el usuario autenticado es el dueño de esta orden
+        if ($detalle->pedido->user_id !== auth()->id()) {
+            abort(403, 'Acceso denegado.');
+        }
+
+        $detalle->estatus = 'entregado';
+        $detalle->save();
+
+        return back()->with('success', '¡Gracias por confirmar la recepción de tu platillo!');
     }
 }
