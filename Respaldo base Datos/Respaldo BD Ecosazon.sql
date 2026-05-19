@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `cocinas` (
   CONSTRAINT `cocinas_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla ecosazon.cocinas: ~69 rows (aproximadamente)
+-- Volcando datos para la tabla ecosazon.cocinas: ~64 rows (aproximadamente)
 INSERT INTO `cocinas` (`id`, `user_id`, `nombre`, `slug`, `categoria`, `estatus`, `zona`, `descripcion`, `calificacion`, `abierto_24h`, `horario`, `telefono`, `imagen_principal`, `imagen_fachada`, `created_at`, `updated_at`) VALUES
 	(4, NULL, 'Pueblo Maya Fit', 'pueblo-maya-fit', 'Saludable', 'activa', 'Caucel', 'Comida balanceada, ligera y nutritiva sin perder el sabor local.', 4.2, 0, '09:00 - 21:00', '9991112233', 'Imagenes/Yuca4.png', 'Imagenes/Yuca4.png', NULL, NULL),
 	(5, NULL, 'El Rincón de Itzimná', 'rincon-itzimna', 'Comida Yucateca', 'activa', 'Itzimná', 'El clásico rincón dominical para disfrutar de la mejor cochinita.', 4.5, 0, '06:00 - 13:00', '9994445566', 'Imagenes/Itzimna.png', 'Imagenes/Itzimna.png', NULL, NULL),
@@ -85,7 +85,7 @@ INSERT INTO `cocinas` (`id`, `user_id`, `nombre`, `slug`, `categoria`, `estatus`
 	(23, NULL, 'Piedras y Empanadas', 'piedras-y-empanadas', 'Antojitos Regionales', 'activa', 'Pensiones', 'Las mejores piedras de masa crujiente de la ciudad.', 4.2, 0, '17:00 - 23:00', '9992000006', 'Imagenes/Cocinas/Regional/PiedyEmp.png', 'Imagenes/Cocinas/Regional/PiedyEmp.png', NULL, NULL),
 	(24, NULL, 'Vaporcitos El Parque', 'vaporcitos-el-parque', 'Antojitos Regionales', 'activa', 'Las Américas', 'Tamales torteados y vaporcitos recién hechos.', 4.8, 0, '07:00 - 12:00', '9992000007', 'Imagenes/Cocinas/Regional/VapElPar.png', 'Imagenes/Cocinas/Regional/VapElPar.png', NULL, NULL),
 	(25, NULL, 'Antojitos Los Compadres', 'antojitos-los-compadres', 'Antojitos Regionales', 'activa', 'Juan Pablo II', 'Variedad de caldos y frituras regionales para cenar.', 4.5, 0, '19:00 - 01:00', '9992000008', 'Imagenes/Cocinas/Regional/AntCom.png', 'Imagenes/Cocinas/Regional/AntCom.png', NULL, NULL),
-	(26, NULL, 'Sazón de la Abuela', 'sazon-abuela-merida', 'Comida Tradicional', 'activa', 'Centro Histórico', 'Guisos de olla tradicionales con el sabor de antaño.', 4.6, 0, '12:00 - 18:00', '9993000001', 'Imagenes/Cocinas/Tradicional/SazAbuela.png', 'Imagenes/Cocinas/Tradicional/SazAbuela.png', NULL, NULL),
+	(26, NULL, 'Sazón de la Abuela', 'sazon-abuela-merida', 'Comida Tradicional', 'activa', 'Centro Histórico', 'Guisos de olla tradicionales con el sabor de antaño.', 4.6, 0, '12:00 - 18:00', '9993000001', 'Imagenes/Cocinas/Tradicional/SazAbuela.png', 'Imagenes/Cocinas/Tradicional/SazAbuela.png', NULL, '2026-05-20 05:16:22'),
 	(27, NULL, 'El Metate de Plata', 'metate-de-plata', 'Comida Tradicional', 'activa', 'Santiago', 'Recetas de herencia preparadas en metate y comal.', 4.7, 0, '08:00 - 16:00', '9993000002', 'Imagenes/Cocina36.png', 'Imagenes/Cocina36.png', NULL, NULL),
 	(28, NULL, 'Comedor La Esperanza', 'comedor-esperanza', 'Comida Tradicional', 'activa', 'San José Tecoh', 'Comida corrida tradicional, abundante y económica.', 4.1, 0, '11:00 - 17:00', '9993000003', 'Imagenes/Cocinas/Tradicional/ComLaEsp.png', 'Imagenes/Cocinas/Tradicional/ComLaEsp.png', NULL, NULL),
 	(29, NULL, 'Fogón Meridano', 'fogon-meridano', 'Comida Tradicional', 'activa', 'Caucel', 'Carnes y guisos preparados a la leña.', 4.5, 0, '13:00 - 21:00', '9993000004', 'Imagenes/Cocina37.png', 'Imagenes/Cocina37.png', NULL, NULL),
@@ -96,7 +96,6 @@ INSERT INTO `cocinas` (`id`, `user_id`, `nombre`, `slug`, `categoria`, `estatus`
 	(34, NULL, 'Cocina de Barrio', 'cocina-barrio-merida', 'Comida Tradicional', 'activa', 'San Juan', 'El verdadero sabor del almuerzo familiar de domingo.', 4.6, 0, '08:00 - 15:00', '9993000009', 'Imagenes/Cocina41.png', 'Imagenes/Cocina41.png', NULL, NULL),
 	(35, NULL, 'Verde que te Quiero', 'verde-que-te-quiero', 'Saludable', 'activa', 'Montebello', 'Bowls nutritivos, ensaladas y jugos prensados en frío.', 4.8, 0, '08:00 - 21:00', '9994000001', 'Imagenes/Cocina1.png', 'Imagenes/Cocina1.png', NULL, NULL),
 	(36, NULL, 'Frescura Meridana', 'frescura-meridana', 'Saludable', 'activa', 'Altabrisa', 'Comida ligera con ingredientes orgánicos y locales.', 4.5, 0, '09:00 - 20:00', '9994000002', 'Imagenes/Cocina2.png', 'Imagenes/Cocina2.png', NULL, NULL),
-	(37, NULL, 'Fit Life Kitchen', 'fit-life-kitchen', 'Saludable', 'activa', 'Las Américas', 'Menús macro-balanceados para deportistas.', 4.7, 0, '07:00 - 22:00', '9994000003', 'Imagenes/Cocina3.png', 'Imagenes/Cocina3.png', NULL, NULL),
 	(38, NULL, 'Natura Bowls', 'natura-bowls-merida', 'Saludable', 'activa', 'Campestre', 'Especialistas en açai bowls y smoothies energéticos.', 4.6, 0, '08:00 - 18:00', '9994000004', 'Imagenes/Cocina4.png', 'Imagenes/Cocina4.png', NULL, NULL),
 	(39, NULL, 'Sano y Cotidiano', 'sano-y-cotidiano', 'Saludable', 'activa', 'García Ginerés', 'Comida del día baja en grasas y sodio.', 4.3, 0, '12:00 - 17:00', '9994000005', 'Imagenes/Cocina5.png', 'Imagenes/Cocina5.png', NULL, NULL),
 	(40, NULL, 'Keto Mérida', 'keto-merida', 'Saludable', 'activa', 'Norte', 'Opciones bajas en carbohidratos, sin azúcar y deliciosas.', 4.9, 0, '09:00 - 21:00', '9994000006', 'Imagenes/Cocina6.png', 'Imagenes/Cocina6.png', NULL, NULL),
@@ -202,7 +201,7 @@ CREATE TABLE IF NOT EXISTS `migrations` (
   `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla ecosazon.migrations: ~12 rows (aproximadamente)
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
@@ -219,7 +218,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 	(11, '2026_05_17_200152_create_tarjetas_table', 6),
 	(12, '2026_05_18_014756_add_custom_fields_and_verification_to_users_table', 7),
 	(13, '2026_05_19_165408_create_pedidos_table', 8),
-	(14, '2026_05_19_170837_create_pedido_detalles_table', 9);
+	(14, '2026_05_19_170837_create_pedido_detalles_table', 9),
+	(15, '2026_05_19_170500_create_pedidos_table', 10);
 
 -- Volcando estructura para tabla ecosazon.password_reset_tokens
 CREATE TABLE IF NOT EXISTS `password_reset_tokens` (
@@ -243,9 +243,9 @@ CREATE TABLE IF NOT EXISTS `pedidos` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla ecosazon.pedidos: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla ecosazon.pedidos: ~13 rows (aproximadamente)
 INSERT INTO `pedidos` (`id`, `user_id`, `email_contacto`, `subtotal`, `iva`, `total`, `notas`, `created_at`, `updated_at`) VALUES
 	(1, NULL, 'chabricardo6@gmail.com', 94.83, 15.17, 110.00, NULL, '2026-05-19 23:22:47', '2026-05-19 23:22:47'),
 	(2, NULL, 'chabricardo6@gmail.com', 0.00, 0.00, 0.00, NULL, '2026-05-19 23:22:55', '2026-05-19 23:22:55'),
@@ -254,7 +254,14 @@ INSERT INTO `pedidos` (`id`, `user_id`, `email_contacto`, `subtotal`, `iva`, `to
 	(5, NULL, 'chabricardo6@gmail.com', 103.45, 16.55, 120.00, '{"nota": "Sin comentarios adicionales"}', '2026-05-19 23:36:11', '2026-05-19 23:36:11'),
 	(6, NULL, 'chabricardo6@gmail.com', 103.45, 16.55, 120.00, '{"nota": "Sin comentarios adicionales"}', '2026-05-19 23:42:27', '2026-05-19 23:42:27'),
 	(7, NULL, 'chabricardo6@gmail.com', 198.28, 31.72, 230.00, NULL, '2026-05-19 23:45:20', '2026-05-19 23:45:20'),
-	(8, 23, 'chabricardo6@gmail.com', 750.00, 120.00, 870.00, 'Sin comentarios adicionales', '2026-05-20 01:11:39', '2026-05-20 01:11:39');
+	(8, 23, 'chabricardo6@gmail.com', 750.00, 120.00, 870.00, 'Sin comentarios adicionales', '2026-05-20 01:11:39', '2026-05-20 01:11:39'),
+	(9, NULL, 'chabricardo6@gmail.com', 120.69, 19.31, 140.00, 'Sin comentarios adicionales', '2026-05-20 02:53:06', '2026-05-20 02:53:06'),
+	(10, 23, 'chabricardo6@gmail.com', 90.52, 14.48, 105.00, 'Sin comentarios adicionales', '2026-05-20 03:07:58', '2026-05-20 03:07:58'),
+	(11, 23, 'chabricardo6@gmail.com', 120.69, 19.31, 140.00, 'Sin comentarios adicionales', '2026-05-20 03:18:03', '2026-05-20 03:18:03'),
+	(12, 23, 'chabricardo6@gmail.com', 556.03, 88.97, 645.00, 'Sin comentarios adicionales', '2026-05-20 03:26:12', '2026-05-20 03:26:12'),
+	(13, 23, 'chabricardo6@gmail.com', 0.00, 0.00, 0.00, 'Sin comentarios adicionales', '2026-05-20 03:31:24', '2026-05-20 03:34:37'),
+	(14, NULL, 'chabricardo6@gmail.com', 125.00, 0.00, 125.00, 'Sin comentarios adicionales', '2026-05-20 05:07:27', '2026-05-20 05:07:27'),
+	(15, 23, 'chabricardo6@gmail.com', 420.00, 0.00, 420.00, 'Sin comentarios adicionales', '2026-05-20 05:10:45', '2026-05-20 05:12:05');
 
 -- Volcando estructura para tabla ecosazon.pedido_detalles
 CREATE TABLE IF NOT EXISTS `pedido_detalles` (
@@ -265,24 +272,34 @@ CREATE TABLE IF NOT EXISTS `pedido_detalles` (
   `cantidad` int NOT NULL,
   `precio_unitario` decimal(10,2) NOT NULL,
   `subtotal` decimal(10,2) NOT NULL,
+  `estatus` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pendiente',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `pedido_detalles_pedido_id_foreign` (`pedido_id`),
   CONSTRAINT `pedido_detalles_pedido_id_foreign` FOREIGN KEY (`pedido_id`) REFERENCES `pedidos` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla ecosazon.pedido_detalles: ~0 rows (aproximadamente)
-INSERT INTO `pedido_detalles` (`id`, `pedido_id`, `plato_nombre`, `cocina_nombre`, `cantidad`, `precio_unitario`, `subtotal`, `created_at`, `updated_at`) VALUES
-	(1, 1, 'Ensalada Citrus Berry', 'Frescura Meridana', 1, 110.00, 110.00, '2026-05-19 23:22:47', '2026-05-19 23:22:47'),
-	(2, 3, 'Bowl Salmón KETO', 'Verde que te Quiero', 1, 180.00, 180.00, '2026-05-19 23:23:34', '2026-05-19 23:23:34'),
-	(3, 4, 'Bowl Salmón KETO', 'Verde que te Quiero', 1, 180.00, 180.00, '2026-05-19 23:30:24', '2026-05-19 23:30:24'),
-	(4, 5, 'Pollo a la plancha', 'Pueblo Maya Fit', 1, 120.00, 120.00, '2026-05-19 23:36:11', '2026-05-19 23:36:11'),
-	(5, 6, 'Pollo a la plancha', 'Pueblo Maya Fit', 1, 120.00, 120.00, '2026-05-19 23:42:27', '2026-05-19 23:42:27'),
-	(6, 7, 'Pollo a la plancha', 'Pueblo Maya Fit', 1, 120.00, 120.00, '2026-05-19 23:45:20', '2026-05-19 23:45:20'),
-	(7, 7, 'Ensalada Citrus Berry', 'Frescura Meridana', 1, 110.00, 110.00, '2026-05-19 23:45:20', '2026-05-19 23:45:20'),
-	(8, 8, 'Ensalada Citrus Berry', 'Frescura Meridana', 6, 110.00, 660.00, '2026-05-20 01:11:39', '2026-05-20 01:11:39'),
-	(9, 8, 'Wrap de Pavo Nutritivo', 'Frescura Meridana', 2, 105.00, 210.00, '2026-05-20 01:11:39', '2026-05-20 01:11:39');
+INSERT INTO `pedido_detalles` (`id`, `pedido_id`, `plato_nombre`, `cocina_nombre`, `cantidad`, `precio_unitario`, `subtotal`, `estatus`, `created_at`, `updated_at`) VALUES
+	(1, 1, 'Ensalada Citrus Berry', 'Frescura Meridana', 1, 110.00, 110.00, 'pendiente', '2026-05-19 23:22:47', '2026-05-19 23:22:47'),
+	(2, 3, 'Bowl Salmón KETO', 'Verde que te Quiero', 1, 180.00, 180.00, 'pendiente', '2026-05-19 23:23:34', '2026-05-19 23:23:34'),
+	(3, 4, 'Bowl Salmón KETO', 'Verde que te Quiero', 1, 180.00, 180.00, 'pendiente', '2026-05-19 23:30:24', '2026-05-19 23:30:24'),
+	(4, 5, 'Pollo a la plancha', 'Pueblo Maya Fit', 1, 120.00, 120.00, 'pendiente', '2026-05-19 23:36:11', '2026-05-19 23:36:11'),
+	(5, 6, 'Pollo a la plancha', 'Pueblo Maya Fit', 1, 120.00, 120.00, 'pendiente', '2026-05-19 23:42:27', '2026-05-19 23:42:27'),
+	(6, 7, 'Pollo a la plancha', 'Pueblo Maya Fit', 1, 120.00, 120.00, 'pendiente', '2026-05-19 23:45:20', '2026-05-19 23:45:20'),
+	(7, 7, 'Ensalada Citrus Berry', 'Frescura Meridana', 1, 110.00, 110.00, 'pendiente', '2026-05-19 23:45:20', '2026-05-19 23:45:20'),
+	(8, 8, 'Ensalada Citrus Berry', 'Frescura Meridana', 6, 110.00, 660.00, 'pendiente', '2026-05-20 01:11:39', '2026-05-20 01:11:39'),
+	(9, 8, 'Wrap de Pavo Nutritivo', 'Frescura Meridana', 2, 105.00, 210.00, 'pendiente', '2026-05-20 01:11:39', '2026-05-20 01:11:39'),
+	(10, 9, 'Plato Sorpresa Saludable Diario', 'Plato Sorpresa', 1, 140.00, 140.00, 'entregado', '2026-05-20 02:53:06', '2026-05-20 03:16:30'),
+	(11, 10, 'Gelatina de Mosaico', 'Sabor a Hogar', 3, 35.00, 105.00, 'pendiente', '2026-05-20 03:07:58', '2026-05-20 03:07:58'),
+	(12, 11, 'Plato Sorpresa Saludable Diario', 'Plato Sorpresa', 1, 140.00, 140.00, 'entregado', '2026-05-20 03:18:03', '2026-05-20 03:19:32'),
+	(13, 12, 'Plato Sorpresa Saludable Diario', 'Plato Sorpresa', 3, 140.00, 420.00, 'entregado', '2026-05-20 03:26:12', '2026-05-20 03:27:19'),
+	(14, 12, 'Postre Sorpresa Light', 'Plato Sorpresa', 3, 75.00, 225.00, 'cancelado', '2026-05-20 03:26:12', '2026-05-20 03:27:20'),
+	(15, 13, 'Plato Sorpresa Saludable Diario', 'Plato Sorpresa', 1, 140.00, 140.00, 'cancelado', '2026-05-20 03:31:24', '2026-05-20 03:34:37'),
+	(16, 14, 'Açai Bowl Supremo', 'Natura Bowls', 1, 125.00, 125.00, 'pendiente', '2026-05-20 05:07:27', '2026-05-20 05:07:27'),
+	(17, 15, 'Plato Sorpresa Saludable Diario', 'Plato Sorpresa', 3, 140.00, 420.00, 'entregado', '2026-05-20 05:10:46', '2026-05-20 05:11:57'),
+	(18, 15, 'Postre Sorpresa Light', 'Plato Sorpresa', 5, 75.00, 375.00, 'cancelado', '2026-05-20 05:10:46', '2026-05-20 05:12:05');
 
 -- Volcando estructura para tabla ecosazon.platos
 CREATE TABLE IF NOT EXISTS `platos` (
@@ -300,7 +317,7 @@ CREATE TABLE IF NOT EXISTS `platos` (
   CONSTRAINT `platos_cocina_id_foreign` FOREIGN KEY (`cocina_id`) REFERENCES `cocinas` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=144 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla ecosazon.platos: ~6 rows (aproximadamente)
+-- Volcando datos para la tabla ecosazon.platos: ~133 rows (aproximadamente)
 INSERT INTO `platos` (`id`, `cocina_id`, `nombre`, `descripcion`, `precio`, `categoria`, `imagen`, `created_at`, `updated_at`) VALUES
 	(4, 4, 'Pollo a la plancha', 'Opción ligera y saludable con vegetales al vapor.', 120.00, NULL, 'Imagenes/PolloP.png', NULL, NULL),
 	(5, 5, 'Cochinita Pibil', 'Tradicional cochinita pibil enterrada, con cebolla morada y chile habanero.', 110.00, NULL, 'Imagenes/CochinitaP.png', NULL, NULL),
@@ -369,22 +386,20 @@ INSERT INTO `platos` (`id`, `cocina_id`, `nombre`, `descripcion`, `precio`, `cat
 	(73, 35, 'Tostadas de Aguacate', 'Dos tostadas de pan integral rústico con huevo poché.', 90.00, 'Desayunos', 'Imagenes/Platos/Plato35_73.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
 	(74, 36, 'Ensalada Citrus Berry', 'Mix de lechugas, fresas frescas, nueces y aderezo ligero de mandarina.', 110.00, 'Ensaladas', 'Imagenes/Platos/Plato36_74.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
 	(75, 36, 'Wrap de Pavo Nutritivo', 'Tortilla verde de espinaca con pechuga de pavo y vegetales crujientes.', 105.00, 'Wraps', 'Imagenes/Platos/Plato36_75.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
-	(76, 37, 'Plato Proteico de Res', 'Corte de res magro con arroz integral y brócoli asado al ajo.', 160.00, 'Plato Fuerte', 'Imagenes/Platos/Plato37_76.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
-	(77, 37, 'Pancakes de Avena', 'Hechos con clara de huevo, avena entera y un toque de miel orgánica.', 85.00, 'Desayunos', 'Imagenes/Platos/Plato37_77.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
-	(78, 38, 'Açai Bowl Supremo', 'Base de açai puro con granola artesanal, fresa y coco rallado.', 125.00, 'Bowls', 'Imagenes/Platos/stock-acai.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
-	(79, 38, 'Green Energy Juice', 'Extracción en frío de manzana verde, apio, pepino y limón.', 60.00, 'Bebidas', 'Imagenes/Platos/stock-green-juice.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
-	(80, 39, 'Pescado al Vapor con Hierbas', 'Filete de pescado blanco con finas hierbas y ejotes al vapor.', 130.00, 'Plato Fuerte', 'Imagenes/Platos/stock-pescado-vapor.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
-	(81, 39, 'Sopa de Verduras de la Casa', 'Sopa ligera con verduras de estación libre de grasas añadidas.', 65.00, 'Entradas', 'Imagenes/Platos/stock-sopa-verduras.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
-	(82, 40, 'Keto Pizza de Pepperoni', 'Masa crocante de harina de almendra con abundante queso mozzarella.', 175.00, 'Keto', 'Imagenes/Platos/stock-keto-pizza.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
-	(83, 40, 'Fat Bombs de Chocolate', 'Trufas de chocolate amargo con mantequilla de maní aptas para KETO.', 50.00, 'Postres', 'Imagenes/Platos/stock-keto-dessert.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
-	(84, 42, 'Tazón Macrobiótico', 'Camote horneado, garbanzos asados, kale y un toque de aderezo de tahini.', 120.00, 'Bowls', 'Imagenes/Platos/stock-macro.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
-	(85, 42, 'Chia Pudding de Mango', 'Semillas de chía hidratadas en leche de coco con cubos de mango fresco.', 70.00, 'Postres', 'Imagenes/Platos/stock-chia.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
-	(86, 43, 'Caldo Depurativo de Jengibre', 'Caldo reconfortante con jengibre fresco, champiñones y cubos de tofu.', 85.00, 'Sopas', 'Imagenes/Platos/stock-caldo-zen.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
-	(87, 43, 'Té Matcha Ceremonial Frío', 'Matcha orgánico de alta calidad batido con leche vegetal.', 65.00, 'Bebidas', 'Imagenes/Platos/stock-matcha.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
-	(88, 44, 'Albóndigas al Chipotle', 'Rellenas de huevo cocido y bañadas en una salsa cremosa de chipotle.', 90.00, 'Guisados', 'Imagenes/Platos/stock-albondigas.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
-	(89, 44, 'Arroz con Leche de la Abuela', 'Postre tradicional espolvoreado con canela molida.', 40.00, 'Postres', 'Imagenes/Platos/stock-arroz-leche.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
-	(90, 45, 'Chiles Rellenos de Queso', 'Ligeramente capeados y bañados en salsa caldosa de jitomate.', 95.00, 'Casera', 'Imagenes/Platos/stock-chiles-rellenos.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
-	(91, 45, 'Sopa de Fideo Seco', 'Fideo sazonado con tomate, un toque de crema y queso fresco.', 55.00, 'Entradas', 'Imagenes/Platos/stock-fideo-seco.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
+	(78, 38, 'Açai Bowl Supremo', 'Base de açai puro con granola artesanal, fresa y coco rallado.', 125.00, 'Bowls', 'Imagenes/Platos/Plato38_78.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
+	(79, 38, 'Green Energy Juice', 'Extracción en frío de manzana verde, apio, pepino y limón.', 60.00, 'Bebidas', 'Imagenes/Platos/Plato38_79.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
+	(80, 39, 'Pescado al Vapor con Hierbas', 'Filete de pescado blanco con finas hierbas y ejotes al vapor.', 130.00, 'Plato Fuerte', 'Imagenes/Platos/Plato39_80.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
+	(81, 39, 'Sopa de Verduras de la Casa', 'Sopa ligera con verduras de estación libre de grasas añadidas.', 65.00, 'Entradas', 'Imagenes/Platos/Plato39_81.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
+	(82, 40, 'Keto Pizza de Pepperoni', 'Masa crocante de harina de almendra con abundante queso mozzarella.', 175.00, 'Keto', 'Imagenes/Platos/Plato40_82.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
+	(83, 40, 'Fat Bombs de Chocolate', 'Trufas de chocolate amargo con mantequilla de maní aptas para KETO.', 50.00, 'Postres', 'Imagenes/Platos/Plato40_83.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
+	(84, 42, 'Tazón Macrobiótico', 'Camote horneado, garbanzos asados, kale y un toque de aderezo de tahini.', 120.00, 'Bowls', 'Imagenes/Platos/Plato42_84.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
+	(85, 42, 'Chia Pudding de Mango', 'Semillas de chía hidratadas en leche de coco con cubos de mango fresco.', 70.00, 'Postres', 'Imagenes/Platos/Plato42_85.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
+	(86, 43, 'Caldo Depurativo de Jengibre', 'Caldo reconfortante con jengibre fresco, champiñones y cubos de tofu.', 85.00, 'Sopas', 'Imagenes/Platos/Plato43_86.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
+	(87, 43, 'Té Matcha Ceremonial Frío', 'Matcha orgánico de alta calidad batido con leche vegetal.', 65.00, 'Bebidas', 'Imagenes/Platos/Plato43_87.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
+	(88, 44, 'Albóndigas al Chipotle', 'Rellenas de huevo cocido y bañadas en una salsa cremosa de chipotle.', 90.00, 'Guisados', 'Imagenes/Platos/Plato44_88.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
+	(89, 44, 'Arroz con Leche de la Abuela', 'Postre tradicional espolvoreado con canela molida.', 40.00, 'Postres', 'Imagenes/Platos/Plato44_89.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
+	(90, 45, 'Chiles Rellenos de Queso', 'Ligeramente capeados y bañados en salsa caldosa de jitomate.', 95.00, 'Casera', 'Imagenes/Platos/Plato45_90.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
+	(91, 45, 'Sopa de Fideo Seco', 'Fideo sazonado con tomate, un toque de crema y queso fresco.', 55.00, 'Entradas', 'Imagenes/Platos/Plato45_91.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
 	(92, 46, 'Guisado de Res con Papas', 'Carne tierna estofada con papas, zanahorias y chícharos.', 100.00, 'Guisados', 'Imagenes/Platos/plato46_1.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
 	(93, 46, 'Agua del Día Horchata', 'Elaborada artesanalmente desde cero con arroz y canela pura.', 35.00, 'Bebidas', 'Imagenes/Platos/plato46_2.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
 	(94, 47, 'Asado de Puerco Estilo Casero', 'Trozos de cerdo en salsa roja espesa bien condimentada.', 110.00, 'Especialidades', 'Imagenes/Platos/plato47_1.png', '2026-05-19 05:44:36', '2026-05-19 05:44:36'),
@@ -453,14 +468,11 @@ CREATE TABLE IF NOT EXISTS `sessions` (
 
 -- Volcando datos para la tabla ecosazon.sessions: ~1 rows (aproximadamente)
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-	('0jKc8ULSbNcHVsHvSzauMJ8qRjPYmSLjCVQOpKQ9', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiMXRkaDdMUkZLWXVCcTVtV08zbnhEQlpIN2ZjQzI4bld2WkIwOUw2OCI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzA6Imh0dHA6Ly9lY29zYXpvbi50ZXN0L3Byb3Bvc2l0byI7czo1OiJyb3V0ZSI7czo5OiJwcm9wb3NpdG8iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1779173283),
-	('A5ZwYG4Yek0HBTOGkiGNjUfejAKbv9EXDWr7bNds', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoidzBZVlpDbGRVTmpCeG9rMzRERDl1WDkzTUk2dU1uWmZpdlVJMDVKbiI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDQ6Imh0dHA6Ly9lY29zYXpvbi50ZXN0L2NoZWNrb3V0L2NvbmZpcm1hY2lvbi83IjtzOjU6InJvdXRlIjtzOjE3OiJjYXJ0LmNvbmZpcm1hY2lvbiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1779216943),
-	('BpZatSSOM0helCwkrN01OPupiB8hsiG3beDiMkwu', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiSTZmUHdPNmlXZnB2eUREQ0hGaE1COTljUUxGY21LSGxMbGxSRnQ3NCI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDI6Imh0dHA6Ly9lY29zYXpvbi50ZXN0L2NoZWNrb3V0L3JlY2liby83L3BkZiI7czo1OiJyb3V0ZSI7czoxNToiY2FydC5yZWNpYm8ucGRmIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1779213226),
-	('efP81Am8M2g7Vs79IAEcaXbxLxbbBvSCth13XKdT', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoicjkzNDFRYnpoWk5TdVpnMTBydlo4TGNhVXppNXlCbTJOVWEyTXQ2dCI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjA6Imh0dHA6Ly9lY29zYXpvbi50ZXN0IjtzOjU6InJvdXRlIjtzOjQ6ImhvbWUiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1779216943),
-	('F6XPHMAmCfl3aZFSSN6TZymsvMZSHwld7CgCjjOD', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiaXlhbTc2MTJ5VkhpY2pKVWZKTGpnclUycDFIYXhRQWx6VUZuN3E2ZyI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjY6Imh0dHA6Ly9lY29zYXpvbi50ZXN0L2xvZ2luIjtzOjU6InJvdXRlIjtzOjU6ImxvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMjoiY2FwdGNoYV90ZXh0IjtzOjY6IlVaeVdnUyI7fQ==', 1779217086),
-	('gu5OKDH0mdyyi7hWEiuD6vjsF1d47QCZUIgUm23h', 23, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiMkIzWkR4Y2t0U2lZN1dUVU94V3RFUFRpOEl1NW41SllNV3E2aWpMYyI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDM6Imh0dHA6Ly9lY29zYXpvbi5sb2NhbC9jaGVja291dC9yZWNpYm8vOC9wZGYiO3M6NToicm91dGUiO3M6MTU6ImNhcnQucmVjaWJvLnBkZiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6MTI6ImNhcHRjaGFfdGV4dCI7czo2OiJBR2NLc1oiO3M6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjIzO30=', 1779217937),
-	('m6wk4IXUJ7nVPukjKdfRRvnObHdmJCb73PqU2P3t', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiN1JoNDd2V2NUcnFSbXgwUTZxRzZkSlVGSmdhVmo3cHhkS2hxdk5CUCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mjg6Imh0dHA6Ly9lY29zYXpvbi50ZXN0L2NhcnJpdG8iO3M6NToicm91dGUiO3M6MTA6ImNhcnQuaW5kZXgiO31zOjM6InVybCI7YToxOntzOjg6ImludGVuZGVkIjtzOjI5OiJodHRwOi8vZWNvc2F6b24udGVzdC9jaGVja291dCI7fX0=', 1779209368),
-	('pZ7RMXmy1K6DmLriLhKW1quRP55BHPfbnqGR2LpR', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiSHYxcm1uNld0T21OSFN6WG1TSHVka1Y4MHB1Z21VV0xLNFBnWEdybCI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjA6Imh0dHA6Ly9lY29zYXpvbi50ZXN0IjtzOjU6InJvdXRlIjtzOjQ6ImhvbWUiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1779216943);
+	('4cqUb3GFWCiNCioSsc9oALkzZA5z62ejftLfvU1i', 20, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiT0VsNDBwUHE4ZE9EU29QQlBqOHoyQjVVcmtBN3FlUG9pU2Z6aFpPOCI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0NDoiaHR0cDovL2Vjb3Nhem9uLmxvY2FsL093bmVycy9vd25lci9kYXNoYm9hcmQiO31zOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czo0NDoiaHR0cDovL2Vjb3Nhem9uLmxvY2FsL093bmVycy9vd25lci9kYXNoYm9hcmQiO3M6NToicm91dGUiO3M6MTU6Im93bmVyLmRhc2hib2FyZCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6MTI6ImNhcHRjaGFfdGV4dCI7czo2OiJvRU5hRlgiO3M6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjIwO30=', 1779226479),
+	('7D3KgRUNs9QTFC4qfd4mhc2AYNVwiuJ7qs5CYtuY', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoibXVXc3dYb3hBQlRLdmtrUjQ0ZnFkUFFQdXU2c0E4Y29qcGtVQ01ZWSI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly9lY29zYXpvbi5sb2NhbCI7czo1OiJyb3V0ZSI7czo0OiJob21lIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1779231220),
+	('kolPJcDwtFe3DPLxL53XaZb2LhrEwQjbeTX5qQAr', 5, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiTVlIOWpjajBhRkxURTJMS2xYRERpWERGY0NuQ1dtOGlxUHBjN050biI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDI6Imh0dHA6Ly9lY29zYXpvbi5sb2NhbC9hZG1pbi9jb2NpbmFzP3BhZ2U9MyI7czo1OiJyb3V0ZSI7czoxOToiYWRtaW4uY29jaW5hcy5pbmRleCI7fXM6MTI6ImNhcHRjaGFfdGV4dCI7czo2OiI3anQ1SnIiO3M6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjU7fQ==', 1779232582),
+	('Vo5VirvD2e0MQx3tlWVz0uquEhiw7UDCc7CfHWJo', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoidHpQSjAydUcxcDlJbFRSRFRpSjZuaEFTdlFJWmNXNk5BSmtQZGdXVyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzE6Imh0dHA6Ly9lY29zYXpvbi5sb2NhbC9wcm9wb3NpdG8iO3M6NToicm91dGUiO3M6OToicHJvcG9zaXRvIjt9fQ==', 1779232602),
+	('YmNvCPkIBK8IJr6a2N2JqykG1qoygOxlP7jpOUPs', 23, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiZm1OMXJXSzJGU0dBeUJ6a3lTZmh2TjhXb1ZzVTZFbXQ1Q2s2TlZDQyI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mjk6Imh0dHA6Ly9lY29zYXpvbi5sb2NhbC9jb2NpbmFzIjtzOjU6InJvdXRlIjtzOjEzOiJjb2NpbmFzLmluZGV4Ijt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMjoiY2FwdGNoYV90ZXh0IjtzOjY6IlA0Vk5UMiI7czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MjM7fQ==', 1779226581);
 
 -- Volcando estructura para tabla ecosazon.tarjetas
 CREATE TABLE IF NOT EXISTS `tarjetas` (
@@ -481,7 +493,7 @@ CREATE TABLE IF NOT EXISTS `tarjetas` (
 -- Volcando datos para la tabla ecosazon.tarjetas: ~0 rows (aproximadamente)
 INSERT INTO `tarjetas` (`id`, `user_id`, `nombre_titular`, `numero_tarjeta`, `mes_expiracion`, `ano_expiracion`, `balance_simulado`, `created_at`, `updated_at`) VALUES
 	(2, 6, 'Hola Mundo', '1234567890123456', '12', '2030', 1199760.00, '2026-05-19 05:31:25', '2026-05-19 05:38:27'),
-	(3, 23, 'Hola Mundo', '1234567890123456', '8', '2030', 1196520.00, '2026-05-20 01:08:01', '2026-05-20 01:11:39');
+	(3, 23, 'Hola Mundo', '1234567890123456', '8', '2030', 1195210.00, '2026-05-20 01:08:01', '2026-05-20 05:12:05');
 
 -- Volcando estructura para tabla ecosazon.users
 CREATE TABLE IF NOT EXISTS `users` (
